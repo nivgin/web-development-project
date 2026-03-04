@@ -34,17 +34,13 @@ afterAll(async () => {
 describe("File Tests", () => { 
     it("upload file", async () => { 
         const filePath = path.join(__dirname, "test.jpg"); 
-        try { 
-            const response = await request.post("/file")
-            .set({authorization: `JWT ${accessToken}`})
-            .attach("file", filePath)
-            .expect(200);
-            expect(response.body.url).toBeDefined(); 
-            let url: string = response.body.url; 
-            url = url.replace(/^.*\/\/[^/]+/, ""); 
-            await request.get(url).expect(200);
-        } catch (err) { 
-            console.error(err); expect(1).toBe(2);
-        } 
+        const response = await request.post("/file")
+        .set({authorization: `JWT ${accessToken}`})
+        .attach("file", filePath)
+        .expect(200);
+        expect(response.body.url).toBeDefined(); 
+        let url: string = response.body.url; 
+        url = url.replace(/^.*\/\/[^/]+/, ""); 
+        await request.get(url).expect(200);
     }); 
 });
