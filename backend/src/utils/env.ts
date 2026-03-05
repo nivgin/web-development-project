@@ -13,6 +13,7 @@ const requiredEnvVar = (varname: string) => {
 
 const env = {
     PORT: process.env.PORT || 4000,
+    BASE_DOMAIN: "http://localhost",
     DATABASE_URI: process.env.DATABASE_URI || 'mongodb://localhost:27017',
     ACCESS_TOKEN_SECRET: requiredEnvVar("ACCESS_TOKEN_SECRET"),
     REFRESH_TOKEN_SECRET: requiredEnvVar("REFRESH_TOKEN_SECRET"),
