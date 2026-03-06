@@ -44,7 +44,7 @@ authRouter.post('/register', async (req, res) => {
     
     const { username, email, password, pfpUrl } = req.body;
 
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !pfpUrl) {
         return res.status(400).send('Invalid User');
     }
 
