@@ -12,7 +12,8 @@ let userId: string = '';
 const testUser = {
     username: "testuser",
     email: "testuser@example.com",
-    password: "hashedpassword"
+    password: "hashedpassword",
+    pfpUrl: "image.png"
 };
 
 const testPost = {

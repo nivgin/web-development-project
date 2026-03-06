@@ -11,7 +11,8 @@ let accessToken: string = '';
 const testUser = {
     username: "testuser",
     email: "testuser@example.com",
-    password: "hashedpassword"
+    password: "hashedpassword",
+    pfpUrl: "image.png"
 };
 
 beforeAll(async () => {
@@ -42,5 +43,13 @@ describe("File Tests", () => {
         let url: string = response.body.url; 
         url = url.replace(/^.*\/\/[^/]+/, ""); 
         await request.get(url).expect(200);
-    }); 
+    });
+
+    it("fails when no file uploaded", async () => {
+        const response = await request.post("/file")
+            .set({ authorization: `JWT ${accessToken}` })
+            .expect(400);
+
+        expect(response.body.error).toBe("No file uploaded");
+    });
 });

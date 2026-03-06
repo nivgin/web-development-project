@@ -42,7 +42,7 @@ authRouter.post('/register', async (req, res) => {
         return res.status(400).send('Missing Body');
     }
     
-    const { username, email, password } = req.body;
+    const { username, email, password, pfpUrl } = req.body;
 
     if (!username || !email || !password) {
         return res.status(400).send('Invalid User');
@@ -50,7 +50,7 @@ authRouter.post('/register', async (req, res) => {
 
     try {
         const passwordHash = await bcrypt.hash(password, 10);
-        const user = await createUser(username, email, passwordHash);
+        const user = await createUser(username, email, passwordHash, pfpUrl);
         return res.status(200).send(user);
     } catch (error) {
         if (error instanceof MongoServerError && error.code === 11000) {

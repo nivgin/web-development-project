@@ -3,7 +3,6 @@ import mongoose from "mongoose";
 import { IComment } from "../models/comment";
 import commentModel from "../models/comment";
 import postModel from "../models/post";
-import userModel from "../models/user";
 import TestAgent from "supertest/lib/agent";
 import { createApp, Mode, TestableApplication } from "../server/server";
 
@@ -16,7 +15,8 @@ let userId: string;
 const testUser = {
     username: "testuser",
     email: "testuser@example.com",
-    password: "password123"
+    password: "password123",
+    pfpUrl: "image.png"
 };
 
 const testPost = {
