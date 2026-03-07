@@ -9,6 +9,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const api = useAPI();
   const [user, setUser, removeUser] = useLocalStorage<User | null>("user", null);
   const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = async (data: LoginData) => {
     const { accessToken, refreshToken, user } = await api.auth.login(data);
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem("refreshToken", refreshToken);
 
     setUser(user);
+    setIsAuthenticated(true);
   };
 
   const register = async (data: RegisterData) => {
@@ -31,7 +33,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
+
     removeUser();
+    setIsAuthenticated(false);
   };
 
   useEffect(() => {
@@ -39,11 +43,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       const token = localStorage.getItem("accessToken");
 
       if (!token) {
+        setIsAuthenticated(false);
         setLoading(false);
         return;
       }
 
       if (user) {
+        setIsAuthenticated(true);
         setLoading(false);
         return;
       }
@@ -51,8 +57,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       try {
         const me = await api.auth.getUserByUsername("me");
         setUser(me);
+        setIsAuthenticated(true);
       } catch {
         removeUser();
+        setIsAuthenticated(false);
       } finally {
         setLoading(false);
       }
@@ -62,7 +70,16 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        register,
+        logout,
+        loading,
+        isAuthenticated,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
