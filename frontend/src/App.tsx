@@ -1,25 +1,26 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
-import { theme } from "./theme/theme"
+import { theme } from "./theme/theme";
 import AuthPage from "./pages/LoginPage";
-
+import { AuthProvider } from "./context/AuthProvider";
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
 
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/auth" element={<AuthPage />} />
-        </Routes>
-      </BrowserRouter>
+      <AuthProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/auth" element={<AuthPage />} />
+          </Routes>
+        </BrowserRouter>
+      </AuthProvider>
     </ThemeProvider>
   );
 }
 
-// Simple placeholder home page
 function Home() {
   return (
     <div

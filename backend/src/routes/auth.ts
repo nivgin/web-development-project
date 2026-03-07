@@ -117,7 +117,13 @@ authRouter.post('/login', async (req, res) => {
 
         res.status(200).send({
             'accessToken': accessToken,
-            'refreshToken': refreshToken
+            'refreshToken': refreshToken,
+            'user': {
+                _id: user._id.toString(),
+                username: user.username,
+                email: user.email,
+                pfpUrl: user.pfpUrl,
+            },
         });
 
     } catch (err) {

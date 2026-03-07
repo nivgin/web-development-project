@@ -8,11 +8,11 @@ import { Box, Typography, Button, Link, Divider } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
-import { apiService } from "../api/apiService";
 import { useNavigate } from "react-router-dom";
 import AppAlert from "../components/Alert";
 import { AxiosError } from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
+import { useAuth } from "../hooks/useAuth";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username is required"),
@@ -35,8 +35,13 @@ type AuthForm = LoginForm | SignupForm;
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
+
+  const { login, register: registerUser } = useAuth();
+
   const [alertMessage, setAlertMessage] = useState("");
-  const [alertSeverity, setAlertSeverity] = useState<"error" | "success" | "info" | "warning">("error");
+  const [alertSeverity, setAlertSeverity] = useState<
+    "error" | "success" | "info" | "warning"
+  >("error");
   const [alertOpen, setAlertOpen] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -54,7 +59,7 @@ export default function AuthPage() {
 
     try {
       if (isLogin) {
-        await apiService.login(data as LoginForm);
+        await login(data as LoginForm);
 
         setAlertMessage("Login successful!");
         setAlertSeverity("success");
@@ -64,7 +69,7 @@ export default function AuthPage() {
       } else {
         const signupData = data as SignupForm;
 
-        await apiService.register({
+        await registerUser({
           ...signupData,
           profilePicture: signupData.profilePicture?.[0],
         });
@@ -170,13 +175,13 @@ export default function AuthPage() {
           <form onSubmit={handleSubmit(onSubmit)}>
             {!isLogin && (
               <Box marginTop={2}>
-                    <FormImageUpload<AuthForm>
-                    name="profilePicture"
-                    control={control}
-                    size={130}
-                    round
-                    />
-                </Box>
+                <FormImageUpload<AuthForm>
+                  name="profilePicture"
+                  control={control}
+                  size={130}
+                  round
+                />
+              </Box>
             )}
             <FormInput<AuthForm>
               name="username"
@@ -241,6 +246,7 @@ export default function AuthPage() {
           </Typography>
         </Box>
       </Box>
+
       <AppAlert
         open={alertOpen}
         message={alertMessage}

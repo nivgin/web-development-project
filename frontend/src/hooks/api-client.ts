@@ -1,11 +1,10 @@
-// src/api/axios.ts
 import axios from 'axios';
 import type { AxiosInstance } from 'axios'
 
 let api: AxiosInstance | null = null;
 
 export const getApi = (): AxiosInstance => {
-  if (api) return api; // return existing instance
+  if (api) return api;
 
   api = axios.create({
     baseURL: 'http://localhost:4000/',
