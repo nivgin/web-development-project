@@ -3,21 +3,37 @@ import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "./theme/theme";
 import AuthPage from "./pages/LoginPage";
 import { AuthProvider } from "./context/AuthProvider";
+import { NavBar } from "./components/Navbar/Navbar";
+import ProtectedRoute from "./routes/ProtectedRoute";
+import { useAuth } from "./hooks/useAuth";
 
 export default function App() {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-
-      <AuthProvider>
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/auth" element={<AuthPage />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthProvider>
+      <BrowserRouter>
+        <AuthProvider>
+          <AppContent />
+        </AuthProvider>
+      </BrowserRouter>
     </ThemeProvider>
+  );
+}
+
+function AppContent() {
+  const { isAuthenticated, loading } = useAuth();
+
+  if (loading) return null;
+
+  return (
+    <>
+      {isAuthenticated && <NavBar />}
+
+      <Routes>
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>}/>
+      </Routes>
+    </>
   );
 }
 
