@@ -8,15 +8,19 @@ import { Box, Typography, Button, Link, Divider } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
+import { apiService } from "../api/apiService";
+import { useNavigate } from "react-router-dom";
+import AppAlert from "../components/Alert";
+import { AxiosError } from "axios";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const loginSchema = z.object({
-  email: z.email("Invalid email"),
-  password: z.string().min(6, "Password must be at least 6 characters"),
+  username: z.string().min(3, "Username is required"),
+  password: z.string().min(6, "Password is required"),
 });
 
 const signupSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
+  username: z.string().min(3, "Username must be at least 3 characters"),
   email: z.email("Invalid email"),
   password: z.string().min(6, "Password must be at least 6 characters"),
   profilePicture: z
@@ -30,6 +34,11 @@ type AuthForm = LoginForm | SignupForm;
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
+  const navigate = useNavigate();
+  const [alertMessage, setAlertMessage] = useState("");
+  const [alertSeverity, setAlertSeverity] = useState<"error" | "success" | "info" | "warning">("error");
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const {
     control,
@@ -40,15 +49,48 @@ export default function AuthPage() {
     mode: "onChange",
   });
 
-  const onSubmit = (data: AuthForm) => {
-    if (isLogin) {
-      console.log("Login:", data);
-    } else {
-      const signupData = data as SignupForm;
-      console.log("Signup:", {
-        ...signupData,
-        profilePicture: signupData.profilePicture?.[0],
-      });
+  const onSubmit = async (data: AuthForm) => {
+    setLoading(true);
+
+    try {
+      if (isLogin) {
+        await apiService.login(data as LoginForm);
+
+        setAlertMessage("Login successful!");
+        setAlertSeverity("success");
+        setAlertOpen(true);
+
+        navigate("/");
+      } else {
+        const signupData = data as SignupForm;
+
+        await apiService.register({
+          ...signupData,
+          profilePicture: signupData.profilePicture?.[0],
+        });
+
+        setAlertMessage("Account created successfully!");
+        setAlertSeverity("success");
+        setAlertOpen(true);
+        setIsLogin(true);
+      }
+    } catch (err) {
+      let message = "Oops, something went wrong. Try again later.";
+
+      if (err instanceof AxiosError) {
+        const backendMessage =
+          err.response?.data?.error || err.response?.data;
+
+        if (backendMessage) {
+          message = backendMessage;
+        }
+      }
+
+      setAlertMessage(message);
+      setAlertSeverity("error");
+      setAlertOpen(true);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -127,22 +169,7 @@ export default function AuthPage() {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {!isLogin && (
-              <Box display="flex" alignItems="flex-start" gap={3}>
-                <Box flex={1} display="flex" flexDirection="column">
-                  <FormInput<AuthForm>
-                    name="firstName"
-                    control={control}
-                    label="First Name"
-                    icon={<PersonOutlineIcon sx={{ color: "gray" }} />}
-                  />
-                  <FormInput<AuthForm>
-                    name="lastName"
-                    control={control}
-                    label="Last Name"
-                    icon={<PersonOutlineIcon sx={{ color: "gray" }} />}
-                  />
-                </Box>
-                <Box marginTop={2}>
+              <Box marginTop={2}>
                     <FormImageUpload<AuthForm>
                     name="profilePicture"
                     control={control}
@@ -150,17 +177,22 @@ export default function AuthPage() {
                     round
                     />
                 </Box>
-              </Box>
             )}
-
             <FormInput<AuthForm>
-              name="email"
+              name="username"
               control={control}
-              label="Email address"
-              type="email"
-              icon={<MailOutlineIcon sx={{ color: "gray" }} />}
+              label="Username"
+              icon={<PersonOutlineIcon sx={{ color: "gray" }} />}
             />
-
+            {!isLogin && (
+              <FormInput<AuthForm>
+                name="email"
+                control={control}
+                label="Email address"
+                type="email"
+                icon={<MailOutlineIcon sx={{ color: "gray" }} />}
+              />
+            )}
             <FormInput<AuthForm>
               name="password"
               control={control}
@@ -177,12 +209,19 @@ export default function AuthPage() {
               sx={{
                 mt: 3,
                 bgcolor: "primary.main",
+                color: "#FFFFFF",
                 "&:hover": { bgcolor: "primary.dark" },
                 py: 1.2,
                 fontWeight: 600,
               }}
             >
-              {isLogin ? "Sign In" : "Sign Up"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : isLogin ? (
+                "Sign In"
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </form>
 
@@ -202,6 +241,12 @@ export default function AuthPage() {
           </Typography>
         </Box>
       </Box>
+      <AppAlert
+        open={alertOpen}
+        message={alertMessage}
+        severity={alertSeverity}
+        onClose={() => setAlertOpen(false)}
+      />
     </Box>
   );
 }
