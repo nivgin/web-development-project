@@ -32,7 +32,7 @@ export const getApi = (): AxiosInstance => {
           const refreshToken = localStorage.getItem('refreshToken');
           const response = await axios.post('http://localhost:4000/auth/refreshToken', { token: refreshToken });
           localStorage.setItem('accessToken', response.data.accessToken);
-          localStorage.setItem('accessToken', response.data.refreshToken);
+          localStorage.setItem('refreshToken', response.data.refreshToken);
           originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
 
           return axios(originalRequest);
