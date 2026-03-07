@@ -1,4 +1,5 @@
 import express, { Application } from "express";
+import cors from 'cors';
 import { dbConnection } from "../utils/db";
 import { createMongoMemoryDatabase } from "../tests/testUtils";
 import bodyParser from "body-parser";
@@ -33,13 +34,21 @@ export const createApp = async (appMmode?: Mode) => {
         }
     }
 
+    app.use(cors());
     app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: true }));
+    app.use((req, res, next) => {
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Headers', '*');
+        res.header('Access-Control-Allow-Methods', '*');
+        next();
+    });
     app.use('/public', express.static('public'));
     app.use('/auth', authRouter)
     app.use('/post', authenticate, postRouter);
     app.use('/comment', authenticate, commentRouter)
     app.use('/user', authenticate, userRouter);
-    app.use('/file', authenticate, fileRouter)
+    app.use('/file', fileRouter)
 
     return app;
 }
