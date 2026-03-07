@@ -61,7 +61,8 @@ Content-Type: application/json
 {
   "username": "testuser",
   "email": "testuser@example.com",
-  "password": "password123"
+  "password": "password123",
+  "pfpUrl": "image.png"
 }
 ###
 # Login

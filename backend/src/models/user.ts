@@ -4,7 +4,8 @@ interface IUser {
     username: string,
     email: string,
     passwordHash: string,
-    tokens: string[]
+    tokens: string[],
+    pfpUrl: string
 }
 
 const userSchema = new mongoose.Schema<IUser>({
@@ -25,6 +26,10 @@ const userSchema = new mongoose.Schema<IUser>({
     tokens: {
         type: [String],
         default: []
+    },
+    pfpUrl: {
+        type: String,
+        required: true
     }
 
 });

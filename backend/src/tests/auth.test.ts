@@ -13,12 +13,14 @@ let refreshToken: string = '';
 const testUser = {
     username: "testuser",
     email: "testuser@example.com",
-    password: "testpassword123"
+    password: "testpassword123",
+    pfpUrl: "image.png"
 };
 
 const badTestUser = {
     username: "testuser",
-    email: "testuser@example.com"
+    email: "testuser@example.com",
+    pfpUrl: "image.png"
 };
 
 beforeAll(async () => {

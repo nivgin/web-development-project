@@ -1,8 +1,8 @@
 import userModel from '../models/user'
 import { IUser } from '../models/user'
 
-export const createUser = async (username: string, email: string, passwordHash: string) => {
-    return await userModel.create({ username, email, passwordHash });
+export const createUser = async (username: string, email: string, passwordHash: string, pfpUrl: string) => {
+    return await userModel.create({ username, email, passwordHash, pfpUrl });
 }
 
 export const getUserById = async (id: string) => {

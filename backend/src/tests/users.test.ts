@@ -16,13 +16,15 @@ let userCounter: number = 0;
 const testUser = {
     username: "testuser",
     email: "testuser@example.com",
-    password: "testpassword123"
+    password: "testpassword123",
+    pfpUrl: "image.png"
 };
 
 const testUser2 = {
     username: "testuser2",
     email: "testuser2@example.com",
-    password: "testpassword456"
+    password: "testpassword456",
+    pfpUrl: "image2.png"
 };
 
 beforeAll(async () => {
@@ -45,12 +47,13 @@ afterAll(async () => {
 });
 
 // Helper function to create a user with hashed password
-const createUserWithHashedPassword = async (userData: { username: string; email: string; password: string }) => {
+const createUserWithHashedPassword = async (userData: { username: string; email: string; password: string, pfpUrl: string }) => {
     const passwordHash = await bcrypt.hash(userData.password, 10);
     return await userModel.create({
         username: userData.username,
         email: userData.email,
-        passwordHash: passwordHash
+        passwordHash: passwordHash,
+        pfpUrl: userData.pfpUrl
     });
 };
 
@@ -60,7 +63,8 @@ const createAuthenticatedUser = async () => {
     const newUser = {
         username: `user_${userCounter}`,
         email: `user_${userCounter}@example.com`,
-        password: "testpassword123"
+        password: "testpassword123",
+        pfpUrl: `image_${userCounter}.png`
     };
     const registerUser = await request.post("/auth/register").send(newUser);
     const userId = registerUser.body._id.toString();

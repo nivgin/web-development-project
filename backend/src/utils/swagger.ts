@@ -64,6 +64,11 @@ const options = {
               description: 'Bcrypt hashed password',
               example: '$2b$10$...',
             },
+            pfpUrl: { 
+              type: "string", 
+              description: "Profile picture image url",
+              example: "http://localhost:8000/image.png" 
+            }
           },
         },
         UpdateUserRequest: {
@@ -80,6 +85,11 @@ const options = {
               description: 'New password (will be hashed)',
               example: 'newPassword123',
             },
+            pfpUrl: { 
+              type: "string", 
+              description: "New profile picture image url",
+              example: "http://localhost:8000/image.png" 
+            }
           },
         },
           RegisterRequest: {
@@ -88,7 +98,8 @@ const options = {
           properties: {
             username: { type: "string", example: "niv" },
             email: { type: "string", example: "niv@example.com" },
-            password: { type: "string", example: "strongpassword123" }
+            password: { type: "string", example: "strongpassword123" },
+            pfpUrl: { type: "string", example: "http://localhost:8000/image.png" }
           }
         },
         LoginRequest: {
