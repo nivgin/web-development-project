@@ -2,17 +2,17 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { FormInput } from "../components/FormInput";
-import { FormImageUpload } from "../components/FormImageUpload";
+import { FormInput } from "../../components/FormInput";
+import { FormImageUpload } from "../../components/FormImageUpload";
 import { Box, Typography, Button, Link, Divider } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import PersonOutlineIcon from "@mui/icons-material/PersonOutline";
 import { useNavigate } from "react-router-dom";
-import AppAlert from "../components/Alert";
+import AppAlert from "../../components/Alert";
 import { AxiosError } from "axios";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useAuth } from "../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 const loginSchema = z.object({
   username: z.string().min(3, "Username is required"),

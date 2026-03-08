@@ -1,11 +1,12 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ThemeProvider, CssBaseline } from "@mui/material";
 import { theme } from "./theme/theme";
-import AuthPage from "./pages/LoginPage";
+import AuthPage from "./pages/LoginPage/LoginPage";
 import { AuthProvider } from "./context/AuthProvider";
 import { NavBar } from "./components/Navbar/Navbar";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./hooks/useAuth";
+import FeedPage from "./pages/FeedPage/FeedPage";
 
 export default function App() {
   return (
@@ -28,27 +29,11 @@ function AppContent() {
   return (
     <>
       {isAuthenticated && <NavBar />}
-
+      
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
-        <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>}/>
+        <Route path="/" element={<ProtectedRoute><FeedPage></FeedPage></ProtectedRoute>}/>
       </Routes>
     </>
-  );
-}
-
-function Home() {
-  return (
-    <div
-      style={{
-        height: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        fontSize: "2rem",
-      }}
-    >
-      Welcome to the Recipe App
-    </div>
   );
 }
