@@ -31,23 +31,5 @@ export const theme = createTheme({
         },
       },
     },
-    MuiCard: {
-      styleOverrides: {
-        root: {
-          borderRadius: 16,
-          border: "1px solid #FFB98A",
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          backgroundColor: "#e9e6e2",
-          "& .MuiOutlinedInput-notchedOutline": {
-            border: "none",
-          },
-        },
-      },
-    },
   },
 });
