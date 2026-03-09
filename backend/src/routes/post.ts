@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import { createPost, getPosts, getPostById, getPostsBySender, updatePost } from "../controllers/post";
+import { createPost, getPosts, getPostById, getPostsBySender, updatePost, likePost, unlikePost } from "../controllers/post";
 import { isValidObjectId } from "mongoose";
 
 const postRouter = express.Router();
@@ -76,11 +76,11 @@ postRouter.get('/', async (req, res) => {
     const sender = req.query.sender as string;
 
     if (sender) {
-        const posts = await getPostsBySender(sender);
+        const posts = await getPostsBySender(sender, req.user?._id);
         return res.status(200).send(posts);
     }
 
-    const posts = await getPosts();
+    const posts = await getPosts(req.user?._id);
     return res.status(200).send(posts);
 })
 
@@ -127,7 +127,7 @@ postRouter.get('/:id', async (req, res) => {
         res.status(400).send('Invalid Post Id')
     }
 
-    const post = await getPostById(id);
+    const post = await getPostById(id, req.user?._id);
 
     if (!post) {
         res.status(404).send('Post Not Found');
@@ -195,7 +195,7 @@ postRouter.put('/:id', async (req, res) => {
         return res.status(400).send('Invalid Post');
     }
 
-    const existingPost = await getPostById(id)
+    const existingPost = await getPostById(id, req.user?._id)
     
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
@@ -216,6 +216,79 @@ postRouter.put('/:id', async (req, res) => {
         return res.status(404).send('Post Not Found');
     }
     res.status(200).send(updatedPost);
+})
+/**
+ * @swagger
+ * /post/{id}/like:
+ *   post:
+ *     tags: [Posts]
+ *     summary: Like a post
+ *     description: Like a post by ID. The authenticated user is automatically used as the liker.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the post to like
+ *     responses:
+ *       200:
+ *         description: Post liked successfully
+ *       404:
+ *         description: Post not found
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Post Not Found"
+ */
+
+postRouter.post('/:id/like', async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const existingPost = await getPostById(id, req.user?._id)
+    
+    if (!existingPost) {
+        return res.status(404).send('Post Not Found');
+    }
+
+    await likePost(id, req.user?._id)
+
+    return res.sendStatus(200);
+})
+ /** /post/{id}/unlike:
+ *   post:
+ *     tags: [Posts]
+ *     summary: Unlike a post
+ *     description: Unlike a post by ID. The authenticated user is automatically used to identify the like to remove.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the post to unlike
+ *     responses:
+ *       200:
+ *         description: Post unliked successfully
+ *       404:
+ *         description: Post not found
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Post Not Found"
+ */
+postRouter.post('/:id/unlike', async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const existingPost = await getPostById(id, req.user?._id)
+    
+    if (!existingPost) {
+        return res.status(404).send('Post Not Found');
+    }
+
+    await unlikePost(id, req.user?._id)
+
+    return res.sendStatus(200);
 })
 
 export default postRouter

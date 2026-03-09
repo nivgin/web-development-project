@@ -61,7 +61,6 @@ fileRouter.post("/", upload.single("file"), (req, res) => {
   }
 
   const url = base + req.file.path;
-  console.log("router.post(/file): " + url);
 
   res.status(200).send({ url });
 });
