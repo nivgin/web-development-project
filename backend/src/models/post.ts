@@ -43,29 +43,12 @@ const postSchema = new mongoose.Schema<IPost>({
     }
 });
 
-postSchema.statics.getPosts = async function(currentUserId: string): Promise<IPostDTO[]> {
-    return this.aggregate([
-        {
-            $addFields: {
-                likeCount: { $size: "$likes" },
-                isLiked: {
-                    $in: [new mongoose.Types.ObjectId(currentUserId), "$likes"]
-                }
-            }
-        },
-        {
-            $project: {
-                likes: 0
-            }
-        }
-    ]);
-};
+postSchema.statics.getPosts = async function(currentUserId: string, skip?: number, limit?: number, match?: object): Promise<IPostDTO[]> {
 
-postSchema.statics.getPostById = async function(postId: string, currentUserId: string): Promise<IPostDTO | null> {
-    const result = await this.aggregate([
-        {
-            $match: { _id: new mongoose.Types.ObjectId(postId) }
-        },
+    return this.aggregate([
+        { $match: match ?? {} },
+        { $skip: (!skip || isNaN(skip)) ? 0 : skip },
+        { $limit: (!limit || isNaN(limit)) ? 10 : limit },
         {
             $addFields: {
                 likeCount: { $size: "$likes" },
@@ -80,7 +63,6 @@ postSchema.statics.getPostById = async function(postId: string, currentUserId: s
             }
         }
     ]);
-    return result[0] ?? null;
 };
 
 postSchema.statics.likePost = async function(postId: string, userId: string): Promise<void> {
@@ -96,8 +78,7 @@ postSchema.statics.unlikePost = async function(postId: string, userId: string): 
 };
 
 interface IPostModel extends mongoose.Model<IPost> {
-    getPosts(currentUserId: string): Promise<IPostDTO[]>;
-    getPostById(postId: string, currentUserId: string): Promise<IPostDTO | null>;
+    getPosts(currentUserId: string, skip?: number, limit?: number, match?: object): Promise<IPostDTO[]>;
     likePost(postId: string, userId: string): Promise<void>;
     unlikePost(postId: string, userId: string): Promise<void>;
 }

@@ -106,6 +106,30 @@ describe("Get Posts", () => {
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(0);
     });
+
+    it("should return first page of posts", async () => {
+        const response = await request.get("/post?page=1&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(2);
+    });
+
+    it("should return second page of posts", async () => {
+        const response = await request.get("/post?page=2&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(1);
+    });
+
+    it("should return empty array when page exceeds total posts", async () => {
+        const response = await request.get("/post?page=99&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(0);
+    });
+
+    it("should return paginated posts by sender", async () => {
+        const response = await request.get(`/post?sender=${userId}&page=1&limit=1`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(1);
+    });
 })
 
 describe("Get Post By Id", () => {

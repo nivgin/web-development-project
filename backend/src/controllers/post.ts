@@ -7,30 +7,17 @@ export const createPost = async (title: string, sender: string, content: string)
 }
 
 export const getPostById = async (id: string, currentUserId: string) => {
-    return await postModel.getPostById(id, currentUserId);
+    const post = await postModel.getPosts(currentUserId, 0, 1, { _id: new mongoose.Types.ObjectId(id) });
+
+    return post[0] ?? null
 }
 
-export const getPosts = async (currentUserId: string) => {
-    return await postModel.getPosts(currentUserId);
+export const getPosts = async (currentUserId: string, skip?: number, limit?: number) => {
+    return await postModel.getPosts(currentUserId, skip, limit);
 }
 
-export const getPostsBySender = async (sender: string, currentUserId: string) => {
-    return await postModel.aggregate([
-        {
-            $match: { sender: new mongoose.Types.ObjectId(sender) }
-        },
-        {
-            $addFields: {
-                likeCount: { $size: "$likes" },
-                isLiked: {
-                    $in: [new mongoose.Types.ObjectId(currentUserId), "$likes"]
-                }
-            }
-        },
-        {
-            $project: { likes: 0 }
-        }
-    ]);
+export const getPostsBySender = async (sender: string, currentUserId: string, skip?: number, limit?: number) => {
+    return await postModel.getPosts(currentUserId, skip, limit, { sender: new mongoose.Types.ObjectId(sender) });
 }
 
 export const updatePost = async (id: string, postBody: IPost) => {

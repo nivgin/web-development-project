@@ -55,16 +55,28 @@ postRouter.post('/', async (req: Request, res: Response) => {
  *   get:
  *     tags: [Posts]
  *     summary: Get all posts or posts by sender
- *     description: Retrieve all posts, or filter posts by the sender's user ID using query parameter.
+ *     description: Retrieve paginated posts, optionally filtered by sender ID.
  *     parameters:
  *       - in: query
  *         name: sender
  *         schema:
  *           type: string
  *         description: Filter posts by sender ID
+ *       - in: query
+ *         name: page
+ *         schema:
+ *           type: integer
+ *           default: 1
+ *         description: Page number (1-based)
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         description: Number of posts per page
  *     responses:
  *       200:
- *         description: List of posts
+ *         description: Paginated list of posts
  *         content:
  *           application/json:
  *             schema:
@@ -74,13 +86,20 @@ postRouter.post('/', async (req: Request, res: Response) => {
  */
 postRouter.get('/', async (req, res) => {
     const sender = req.query.sender as string;
+    const page = parseInt(req.query.page as string);
+    const limit = parseInt(req.query.limit as string);
+    let skip;
+
+    if (!isNaN(page) && limit !== undefined) {
+        skip = (page - 1) * limit;
+    }
 
     if (sender) {
-        const posts = await getPostsBySender(sender, req.user?._id);
+        const posts = await getPostsBySender(sender, req.user?._id, skip, limit);
         return res.status(200).send(posts);
     }
 
-    const posts = await getPosts(req.user?._id);
+    const posts = await getPosts(req.user?._id, skip, limit);
     return res.status(200).send(posts);
 })
 
