@@ -90,7 +90,7 @@ postRouter.get('/', async (req, res) => {
     const limit = parseInt(req.query.limit as string);
     let skip;
 
-    if (!isNaN(page) && limit !== undefined) {
+    if (!isNaN(page) && !isNaN(limit)) {
         skip = (page - 1) * limit;
     }
 

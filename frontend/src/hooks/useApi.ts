@@ -1,6 +1,7 @@
 import api from "./api-client";
 import type { User } from "../types/User";
 import type { LoginData, RegisterData, LoginResponse } from "../types/Auth";
+import type { Post } from "../types/Post";
 
 export const useAPI = () => {
   return {
@@ -38,6 +39,14 @@ export const useAPI = () => {
 
       getUserByUsername: async (username: string) =>
         (await api.get<User>(`/user/${username}`)).data,
+    },
+    posts: {
+      getPosts: async (page?: number, limit?: number) =>
+        (
+          await api.get<Post[]>("/post", {
+            params: { page, limit },
+          })
+        ).data,
     },
   };
 };

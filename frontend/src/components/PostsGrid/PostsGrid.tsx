@@ -1,15 +1,7 @@
 import { Box } from "@mui/material";
 import PostCard from "../PostCard/PostCard";
 import { container, grid } from "./styles";
-
-export interface Post {
-  id: number;
-  title: string;
-  image: string;
-  description: string;
-  likes: number;
-  comments: number;
-}
+import type { Post } from "../../types/Post";
 
 interface PostsGridProps {
   posts: Post[];
