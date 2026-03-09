@@ -2,19 +2,12 @@ import { Card, CardMedia, CardContent, Typography, Box, Divider } from "@mui/mat
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { card, title, description, metaRow, metaItem, cardMedia, divider } from "./styles";
+import type { Post } from "../../types/Post";
 
-export interface PostCardProps {
-  title: string;
-  image: string;
-  description: string;
-  likes: number;
-  comments: number;
-}
-
-const PostCard = ({ title: postTitle, image, description: postDesc, likes, comments }: PostCardProps) => {
+const PostCard = ({ title: postTitle, content: postDesc, likeCount: likes, commentCount: comments }: Post) => {
   return (
     <Card sx={card}>
-      <CardMedia component="img" sx={cardMedia} image={image} alt={postTitle} />
+      <CardMedia component="img" sx={cardMedia} image="CHANGE WHEN WE HAVE PICTURE IN POST" alt={postTitle} />
       <CardContent>
         <Typography variant="h6" sx={title}>
           {postTitle}
