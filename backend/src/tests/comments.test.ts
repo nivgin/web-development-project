@@ -77,6 +77,10 @@ describe("Comment Routes", () => {
             const createdComment = await commentModel.findById(response.body._id);
             expect(createdComment).toBeTruthy();
             expect(createdComment?.content).toBe(testComment.content);
+
+            const relatedPost = await postModel.findById(testComment.postId);
+            expect(relatedPost).toBeTruthy();
+            expect(relatedPost?.commentCount).toBe(1);
         });
         
         it("should return 400 when body is missing", async () => {
@@ -234,6 +238,10 @@ describe("Comment Routes", () => {
         });
         
         it("should delete comment successfully", async () => {
+            const beforeDeletePost = await postModel.findById(testComment.postId);
+            expect(beforeDeletePost).toBeTruthy();
+            expect(beforeDeletePost?.commentCount).toBe(1);
+            
             const response = await request
                 .delete(`/comment/${commentId}`)
                 .set({ authorization: `JWT ${accessToken}` })
@@ -244,6 +252,10 @@ describe("Comment Routes", () => {
             
             const deletedComment = await commentModel.findById(commentId);
             expect(deletedComment).toBeNull();
+            
+            const afterDeletePost = await postModel.findById(testComment.postId);
+            expect(afterDeletePost).toBeTruthy();
+            expect(afterDeletePost?.commentCount).toBe(0);
         });
         
         it("should return 400 for invalid comment ID format", async () => {

@@ -1,7 +1,10 @@
 import commentModel from '../models/comment'
+import postModel from '../models/post'
 
 export const createComment = async (postId: string, sender: string, content: string) => {
-    return await commentModel.create({postId , sender, content});
+    const comment = await commentModel.create({ postId, sender, content });
+    await postModel.findByIdAndUpdate(postId, { $inc: { commentCount: 1 } });
+    return comment;
 }
 
 export const getComments = async () => {
@@ -13,8 +16,10 @@ export const getCommentById = async (commentId: string) => {
 }
 
 export const deleteComment = async (commentId: string) => {
-    return await commentModel.findByIdAndDelete(commentId);
-} 
+    const comment = await commentModel.findByIdAndDelete(commentId);
+    await postModel.findByIdAndUpdate(comment!.postId, { $inc: { commentCount: -1 } });
+    return comment;
+}
 
 export const updateComment = async (commentId: string, content: string) => {
     return await commentModel.findByIdAndUpdate(commentId, { content }, { new: true });
