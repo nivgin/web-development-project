@@ -200,3 +200,79 @@ describe("Update Post By Id", () => {
     });
     
 })
+
+describe("Get Posts DTO fields", () => {
+    let postId: string;
+    
+    beforeEach(async () => {
+        const post = await postModel.create({ ...testPost, sender: userId });
+        postId = post._id.toString();
+    });
+
+    it("should return likeCount and isLiked=true for liked post", async () => {
+        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(response.body.likeCount).toBe(1);
+        expect(response.body.isLiked).toBe(true);
+    });
+
+    it("should return isLiked=false for post not liked by user", async () => {
+        await request.post(`/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(response.body.likeCount).toBe(0);
+        expect(response.body.isLiked).toBe(false);
+    });
+
+        it("should return likeCount and isLiked for the correct posts", async () => {
+        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await postModel.create({ ...testPost, sender: userId });
+        const response = await request.get(`/post`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        console.log(response)
+        expect(response.body[0].likeCount).toBe(1);
+        expect(response.body[0].isLiked).toBe(true);
+        expect(response.body[1].likeCount).toBe(0);
+        expect(response.body[1].isLiked).toBe(false);
+    });
+});
+
+describe("Like Post", () => {
+    let postId: string;
+        
+    beforeEach(async () => {
+        const post = await postModel.create({ ...testPost, sender: userId });
+        postId = post._id.toString();
+    });
+
+    it("should like a post successfully", async () => {
+        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const post = await postModel.findById(postId);
+        expect(post?.likes).toContainEqual(new mongoose.Types.ObjectId(userId));
+    });
+
+    it("should return 404 for non-existent post ID", async () => {
+        const nonExistentId = new mongoose.Types.ObjectId().toString();
+        const response = await request.post(`/post/${nonExistentId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(404);
+        expect(response.text).toBe("Post Not Found");
+    });
+});
+
+describe("Unlike Post", () => {
+    let postId: string;
+        
+    beforeEach(async () => {
+        const post = await postModel.create({ ...testPost, sender: userId });
+        postId = post._id.toString();
+    });
+    
+    it("should unlike a post successfully", async () => {
+        await request.post(`/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const post = await postModel.findById(postId);
+        expect(post?.likes).not.toContainEqual(new mongoose.Types.ObjectId(userId));
+    });
+
+    it("should return 404 for non-existent post ID", async () => {
+        const nonExistentId = new mongoose.Types.ObjectId().toString();
+        const response = await request.post(`/post/${nonExistentId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(404);
+        expect(response.text).toBe("Post Not Found");
+    });
+});

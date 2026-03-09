@@ -118,7 +118,6 @@ describe("Token expirey and rotation", () => {
         expect(accessToken).toBeDefined();
         expect(refreshToken).toBeDefined();
         const user = await verifyRefreshToken(refreshToken);
-        console.log(user);
         expect(user.tokens.includes(refreshToken)).toBeTruthy();
         expect(user.tokens.includes(oldRefreshToken)).toBeFalsy();
         await request.get("/post").set({authorization: `JWT ${accessToken}`}).expect(200);

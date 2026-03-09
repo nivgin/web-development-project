@@ -44,7 +44,7 @@ commentRouter.post('/', async (req, res) => {
         return res.status(400).send('Invalid Comment');
     }
 
-    const post = await getPostById(postId);
+    const post = await getPostById(postId, req.user?.id);
     
     if (!post) {
         return res.status(400).send('Related Post Does Not Exist');
