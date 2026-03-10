@@ -25,7 +25,7 @@ export const getApi = (): AxiosInstance => {
     res => res,
     async err => {
       const originalRequest = err.config;
-      if (err.response?.status === 401 && !originalRequest._retry) {
+      if (err.response?.status === 403 && !originalRequest._retry) {
         originalRequest._retry = true;
         try {
           const refreshToken = localStorage.getItem('refreshToken');
