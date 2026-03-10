@@ -44,6 +44,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!token) {
         setIsAuthenticated(false);
+        localStorage.clear();
         setLoading(false);
         return;
       }
@@ -54,16 +55,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         return;
       }
 
-      try {
-        const me = await api.auth.getUserByUsername("me");
-        setUser(me);
-        setIsAuthenticated(true);
-      } catch {
-        removeUser();
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
+      await logout();
+      setLoading(false);
     };
 
     initAuth();
