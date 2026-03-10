@@ -18,7 +18,8 @@ const testUser = {
 
 const testPost = {
     title: "titletest",
-    content: "this is content"
+    content: "this is content",
+    imageUrl: "image.png"
 }
 
 const badPost = {
@@ -59,6 +60,7 @@ describe("Create Post", () => {
         const post = await postModel.findById(response.body._id);
         expect(post).toBeTruthy();
         expect(post?.content).toBe(testPost.content);
+        expect(post?.imageUrl).toBe(testPost.imageUrl);
     });
     
     it("should return 400 when body is missing", async () => {
@@ -83,6 +85,7 @@ describe("Get Posts", () => {
             { 
                 sender: new mongoose.Types.ObjectId(),
                 title: "secret post",
+                imageUrl: "secret.png",
                 content: "this is post by secret user"
             }
         ]);
@@ -145,6 +148,7 @@ describe("Get Post By Id", () => {
         expect(response.body).toBeDefined();
         expect(response.body._id).toBe(postId);
         expect(response.body.content).toBe(testPost.content);
+        expect(response.body.imageUrl).toBe(testPost.imageUrl);
     });
     
     it("Invalid post ID format", async () => {
@@ -170,16 +174,19 @@ describe("Update Post By Id", () => {
     it("update post content successfully", async () => {
         const updatedPost = {
             title: "newtitle",
-            content: "Updated post content"
+            content: "Updated post content",
+            imageUrl: "newimage.png"
         };
         const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(200);
         expect(response.body).toBeDefined();
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(updatedPost.title);
-        expect(response.body.content).toBe(updatedPost.content);        
+        expect(response.body.content).toBe(updatedPost.content); 
+        expect(response.body.imageUrl).toBe(updatedPost.imageUrl);       
         const post = await postModel.findById(postId);
         expect(post?.title).toBe(updatedPost.title);
         expect(post?.content).toBe(updatedPost.content);
+        expect(post?.imageUrl).toBe(updatedPost.imageUrl);
     });
     
     it("should return 400 for invalid post ID format", async () => {
@@ -251,7 +258,6 @@ describe("Get Posts DTO fields", () => {
         await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         await postModel.create({ ...testPost, sender: userId });
         const response = await request.get(`/post`).set({ authorization: `JWT ${accessToken}` }).expect(200);
-        console.log(response)
         expect(response.body[0].likeCount).toBe(1);
         expect(response.body[0].isLiked).toBe(true);
         expect(response.body[1].likeCount).toBe(0);
