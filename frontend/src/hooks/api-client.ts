@@ -29,16 +29,25 @@ export const getApi = (): AxiosInstance => {
         originalRequest._retry = true;
         try {
           const refreshToken = localStorage.getItem('refreshToken');
-          const response = await axios.post('http://localhost:4000/auth/refreshToken', { token: refreshToken });
+          const response = await axios.post(
+            'http://localhost:4000/auth/refreshToken',
+            {},
+            {
+              headers: {
+                Authorization: `Bearer ${refreshToken}`
+              }
+            }
+          );
           localStorage.setItem('accessToken', response.data.accessToken);
           localStorage.setItem('refreshToken', response.data.refreshToken);
           originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
+          console.log('Refresh token successful');
 
           return axios(originalRequest);
         } catch (refreshErr) {
           console.log('Refresh token failed', refreshErr);
-          localStorage.removeItem('accessToken');
-          localStorage.removeItem('refreshToken');
+          localStorage.clear()
+          
           window.location.href = '/auth';
 
           throw refreshErr;
