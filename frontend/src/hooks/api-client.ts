@@ -41,11 +41,9 @@ export const getApi = (): AxiosInstance => {
           localStorage.setItem('accessToken', response.data.accessToken);
           localStorage.setItem('refreshToken', response.data.refreshToken);
           originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
-          console.log('Refresh token successful');
 
           return axios(originalRequest);
         } catch (refreshErr) {
-          console.log('Refresh token failed', refreshErr);
           localStorage.clear()
           
           window.location.href = '/auth';
