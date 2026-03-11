@@ -1,24 +1,42 @@
 import { useEffect, useState } from "react";
 import { AuthContext } from "./auth-context";
 import { useAPI } from "../hooks/useApi";
-import { useLocalStorage } from "usehooks-ts";
-import type { User } from "../types/User";
 import type { LoginData, RegisterData } from "../types/Auth";
+
+type JwtPayload = {
+  _id: string;
+  exp: number;
+  iat: number;
+};
+
+const parseJwt = (token: string): JwtPayload | null => {
+  try {
+    const base64Payload = token.split(".")[1];
+    const payload = atob(base64Payload);
+    return JSON.parse(payload);
+  } catch {
+    return null;
+  }
+};
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const api = useAPI();
-  const [user, setUser, removeUser] = useLocalStorage<User | null>("user", null);
+  const [user, setUser] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const login = async (data: LoginData) => {
-    const { accessToken, refreshToken, user } = await api.auth.login(data);
+    const { accessToken, refreshToken } = await api.auth.login(data);
 
     localStorage.setItem("accessToken", accessToken);
     localStorage.setItem("refreshToken", refreshToken);
 
-    setUser(user);
-    setIsAuthenticated(true);
+    const payload = parseJwt(accessToken);
+
+    if (payload) {
+      setUser(payload._id);
+      setIsAuthenticated(true);
+    }
   };
 
   const register = async (data: RegisterData) => {
@@ -34,7 +52,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.removeItem("accessToken");
     localStorage.removeItem("refreshToken");
 
-    removeUser();
+    setUser(null);
     setIsAuthenticated(false);
   };
 
@@ -44,26 +62,24 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
       if (!token) {
         setIsAuthenticated(false);
+        localStorage.clear();
         setLoading(false);
         return;
       }
 
-      if (user) {
+      const payload = parseJwt(token);
+      
+      if (payload) {
+        setUser(payload._id);
         setIsAuthenticated(true);
         setLoading(false);
-        return;
+        return
       }
 
-      try {
-        const me = await api.auth.getUserByUsername("me");
-        setUser(me);
-        setIsAuthenticated(true);
-      } catch {
-        removeUser();
-        setIsAuthenticated(false);
-      } finally {
-        setLoading(false);
-      }
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      setIsAuthenticated(false);
+      setLoading(false);
     };
 
     initAuth();
