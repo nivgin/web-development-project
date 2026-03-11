@@ -4,10 +4,10 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { card, title, description, metaRow, metaItem, cardMedia, divider } from "./styles";
 import type { Post } from "../../types/Post";
 
-const PostCard = ({ title: postTitle, content: postDesc, likeCount: likes, commentCount: comments }: Post) => {
+const PostCard = ({ title: postTitle, content: postDesc, likeCount: likes, imageUrl, commentCount: comments }: Post) => {
   return (
     <Card sx={card}>
-      <CardMedia component="img" sx={cardMedia} image="CHANGE WHEN WE HAVE PICTURE IN POST" alt={postTitle} />
+      <CardMedia component="img" sx={cardMedia} image={imageUrl} alt={postTitle} />
       <CardContent>
         <Typography variant="h6" sx={title}>
           {postTitle}

@@ -132,7 +132,8 @@ const options = {
           required: ["title", "content"],
           properties: {
             title: { type: "string", example: "My first post" },
-            content: { type: "string", example: "This is the content of the post." }
+            content: { type: "string", example: "This is the content of the post." },
+            imageUrl: { type: "string", example: "http://localhost:8000/image.png" }
           }
         },
         UpdatePostRequest: {

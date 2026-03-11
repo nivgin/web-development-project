@@ -2,8 +2,8 @@ import postModel from '../models/post'
 import { IPost } from '../models/post'
 import mongoose from 'mongoose';
 
-export const createPost = async (title: string, sender: string, content: string) => {
-    return await postModel.create({ title, sender, content });
+export const createPost = async (title: string, sender: string, content: string, imageUrl: string) => {
+    return await postModel.create({ title, sender, content, imageUrl });
 }
 
 export const getPostById = async (id: string, currentUserId: string) => {

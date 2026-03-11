@@ -38,13 +38,13 @@ postRouter.post('/', async (req: Request, res: Response) => {
     }
     
     const sender = req.user;
-    const { title, content } = req.body;
+    const { title, content, imageUrl } = req.body;
 
-    if (!title || !content || !sender) {
+    if (!title || !content || !sender || !imageUrl) {
         return res.status(400).send('Invalid Post');
     }
 
-    const post = await createPost(title, sender._id, content);
+    const post = await createPost(title, sender._id, content, imageUrl);
 
     return res.status(200).send(post);
 })

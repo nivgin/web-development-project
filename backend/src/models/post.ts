@@ -4,6 +4,7 @@ interface IPost {
     sender: mongoose.Types.ObjectId,
     title: string,
     content: string,
+    imageUrl: string,
     likes: mongoose.Types.ObjectId[],
     commentCount: number
 }
@@ -13,6 +14,7 @@ interface IPostDTO {
     sender: mongoose.Types.ObjectId,
     title: string,
     content: string,
+    imageUrl: string,
     likeCount: number,
     isLiked: boolean,
     commentCount: number
@@ -29,6 +31,10 @@ const postSchema = new mongoose.Schema<IPost>({
         required: true
     },
     content: {
+        type: String,
+        required: true
+    },
+    imageUrl: {
         type: String,
         required: true
     },

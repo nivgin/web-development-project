@@ -22,7 +22,8 @@ const testUser = {
 const testPost = {
     title: "Test Post",
     content: "This is a test post content",
-    sender: ""
+    sender: "",
+    imageUrl: "image.png"
 };
 
 const testComment = {
