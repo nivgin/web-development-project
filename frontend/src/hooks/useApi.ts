@@ -41,10 +41,10 @@ export const useAPI = () => {
         (await api.get<User>(`/user/${username}`)).data,
     },
     posts: {
-      getPosts: async (page?: number, limit?: number) =>
+      getPosts: async (search?: string, page?: number, limit?: number) =>
         (
           await api.get<Post[]>("/post", {
-            params: { page, limit },
+            params: { search, page, limit },
           })
         ).data,
 
