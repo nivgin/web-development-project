@@ -55,13 +55,18 @@ postRouter.post('/', async (req: Request, res: Response) => {
  *   get:
  *     tags: [Posts]
  *     summary: Get all posts or posts by sender
- *     description: Retrieve paginated posts, optionally filtered by sender ID.
+ *     description: Retrieve paginated posts, optionally filtered by sender ID or search query.
  *     parameters:
  *       - in: query
  *         name: sender
  *         schema:
  *           type: string
  *         description: Filter posts by sender ID
+ *       - in: query
+ *         name: search
+ *         schema:
+ *           type: string
+ *         description: Search posts by title (partial, case-insensitive)
  *       - in: query
  *         name: page
  *         schema:
@@ -86,6 +91,7 @@ postRouter.post('/', async (req: Request, res: Response) => {
  */
 postRouter.get('/', async (req, res) => {
     const sender = req.query.sender as string;
+    const search = req.query.search as string;
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
     let skip;
@@ -95,13 +101,13 @@ postRouter.get('/', async (req, res) => {
     }
 
     if (sender) {
-        const posts = await getPostsBySender(sender, req.user?._id, skip, limit);
+        const posts = await getPostsBySender(sender, req.user?._id, skip, limit, search);
         return res.status(200).send(posts);
     }
 
-    const posts = await getPosts(req.user?._id, skip, limit);
+    const posts = await getPosts(req.user?._id, skip, limit, search);
     return res.status(200).send(posts);
-})
+});
 
 /**
  * @swagger

@@ -49,10 +49,10 @@ const postSchema = new mongoose.Schema<IPost>({
     }
 });
 
-postSchema.statics.getPosts = async function(currentUserId: string, skip?: number, limit?: number, match?: object): Promise<IPostDTO[]> {
+postSchema.statics.getPosts = async function(currentUserId: string, match: object, skip?: number, limit?: number): Promise<IPostDTO[]> {
 
     return this.aggregate([
-        { $match: match ?? {} },
+        { $match: match },
         { $skip: (!skip || isNaN(skip)) ? 0 : skip },
         { $limit: (!limit || isNaN(limit)) ? 10 : limit },
         {
@@ -84,7 +84,7 @@ postSchema.statics.unlikePost = async function(postId: string, userId: string): 
 };
 
 interface IPostModel extends mongoose.Model<IPost> {
-    getPosts(currentUserId: string, skip?: number, limit?: number, match?: object): Promise<IPostDTO[]>;
+    getPosts(currentUserId: string, match: object, skip?: number, limit?: number): Promise<IPostDTO[]>;
     likePost(postId: string, userId: string): Promise<void>;
     unlikePost(postId: string, userId: string): Promise<void>;
 }

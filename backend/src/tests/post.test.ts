@@ -133,6 +133,36 @@ describe("Get Posts", () => {
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(1);
     });
+
+        it("should return posts matching search query", async () => {
+        const response = await request.get("/post?search=title").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(2);
+    });
+
+    it("should return posts matching partial search query", async () => {
+        const response = await request.get("/post?search=ret").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(1);
+    });
+
+    it("should be case-insensitive when searching", async () => {
+        const response = await request.get("/post?search=TITLE").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(2);
+    });
+
+    it("should return posts matching search query filtered by sender", async () => {
+        const response = await request.get(`/post?sender=${userId}&search=title`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(2);
+    });
+
+    it("should return empty array when search does not match any post", async () => {
+        const response = await request.get("/post?search=zzznomatch").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(0);
+    });
 })
 
 describe("Get Post By Id", () => {
