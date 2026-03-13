@@ -41,6 +41,12 @@ export const getApi = (): AxiosInstance => {
           localStorage.setItem('accessToken', response.data.accessToken);
           localStorage.setItem('refreshToken', response.data.refreshToken);
           originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
+          
+          const body = JSON.parse(originalRequest.data || '{}');
+          if (body.refreshToken) {
+            body.refreshToken = response.data.refreshToken;
+            originalRequest.data = JSON.stringify(body);
+          }
 
           return axios(originalRequest);
         } catch (refreshErr) {
