@@ -12,7 +12,7 @@ const PostsGrid = ({ posts }: PostsGridProps) => {
     <Box sx={container}>
       <Box sx={grid}>
         {posts.map((post) => (
-          <PostCard key={post.id} {...post} />
+          <PostCard key={post._id} {...post} />
         ))}
       </Box>
     </Box>

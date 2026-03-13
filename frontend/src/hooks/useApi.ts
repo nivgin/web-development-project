@@ -47,6 +47,12 @@ export const useAPI = () => {
             params: { page, limit },
           })
         ).data,
+
+      likePost: async (id: string) =>
+        (await api.post(`/post/${id}/like`)).data,
+
+      unlikePost: async (id: string) =>
+        (await api.post(`/post/${id}/unlike`)).data,
     },
   };
 };
