@@ -7,17 +7,26 @@ export const createPost = async (title: string, sender: string, content: string,
 }
 
 export const getPostById = async (id: string, currentUserId: string) => {
-    const post = await postModel.getPosts(currentUserId, 0, 1, { _id: new mongoose.Types.ObjectId(id) });
+    const post = await postModel.getPosts(currentUserId, { _id: new mongoose.Types.ObjectId(id) }, 0, 1);
 
     return post[0] ?? null
 }
 
-export const getPosts = async (currentUserId: string, skip?: number, limit?: number) => {
-    return await postModel.getPosts(currentUserId, skip, limit);
+export const getPosts = async (currentUserId: string, skip?: number, limit?: number, search?: string) => {
+    const match = search 
+        ? { title: { $regex: search, $options: 'i' } }
+        : {};
+    
+    return await postModel.getPosts(currentUserId, match, skip, limit);
 }
 
-export const getPostsBySender = async (sender: string, currentUserId: string, skip?: number, limit?: number) => {
-    return await postModel.getPosts(currentUserId, skip, limit, { sender: new mongoose.Types.ObjectId(sender) });
+export const getPostsBySender = async (sender: string, currentUserId: string, skip?: number, limit?: number, search?: string) => {
+    const match = {
+        sender: new mongoose.Types.ObjectId(sender),
+        ...(search && { title: { $regex: search, $options: 'i' } })
+    };
+
+    return await postModel.getPosts(currentUserId, match, skip, limit);
 }
 
 export const updatePost = async (id: string, postBody: IPost) => {
