@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import mongoose from "mongoose";
 import postModel from "../models/post";
+import categoryModel from '../models/category';
 import TestAgent from "supertest/lib/agent";
 import { createApp, Mode, TestableApplication } from "../server/server";
 
@@ -401,5 +402,22 @@ describe("Unlike Post", () => {
         const nonExistentId = new mongoose.Types.ObjectId().toString();
         const response = await request.post(`/post/${nonExistentId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(404);
         expect(response.text).toBe("Post Not Found");
+    });
+});
+
+describe("Get Categories", () => {
+    it("should return all categories", async () => {
+        await categoryModel.create([
+            { name: "Soup" },
+            { name: "Breakfast" },
+            { name: "Dessert" }
+        ]);
+
+        const response = await request.get("/post/categories").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        expect(Array.isArray(response.body)).toBe(true);
+        expect(response.body.length).toBe(3);
+        expect(response.body).toContain("Soup");
+        expect(response.body).toContain("Breakfast");
+        expect(response.body).toContain("Dessert");
     });
 });

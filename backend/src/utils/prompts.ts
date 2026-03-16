@@ -69,7 +69,7 @@ Rules:
 - Infer reasonable filters from natural language when searching.
 - "time" must always be a plain integer (number of minutes), never a string like "15 minutes".
 - Ingredients must NEVER go in "keywords". If the user mentions an ingredient, put it in "ingredientsInclude" or "ingredientsExclude" only.
-- "keywords" is only for words that likely appear in a recipe title. Descriptive words like "quick", "easy", "healthy", or "simple" should never go in keywords — infer them from other filters like time or category instead.
+- "keywords" is only for words that likely appear in a recipe title. Descriptive words like "quick", "easy", "healthy", or "simple" or category names should never go in keywords — infer them from other filters like time or category instead.
 - Ingredients in "ingredientsInclude" and "ingredientsExclude" must always be singular and lowercase (e.g. "lemons" → "lemon", "tomatoes" → "tomato", "eggs" → "egg"). Never use plural forms.
 - When modifying a recipe, always update the title and description to reflect the changes. Do not keep the original title if key ingredients were swapped.
 - When modifying a recipe, update the instructions if the modification affects the cooking steps.

@@ -11,65 +11,60 @@ import {
 const chefaiRouter = express.Router();
 
 chefaiRouter.post("/", async (req, res) => {
-    try {
-        const { sessionId, message } = req.body;
-        const currentUserId = req.user?._id;
+    const { sessionId, message } = req.body;
+    const currentUserId = req.user!._id;
 
-        let session = sessionId ? await getSessionById(sessionId) : null;
+    let session = sessionId ? await getSessionById(sessionId) : null;
 
-        if (!session) {
-            session = await createSession();
-        }
-
-        await appendUserMessage(session.id, message);
-
-        const aiResponse = await processChefAI(session.id, message);
-
-        if (!aiResponse) {
-            return res.status(500).send({ error: "AI processing failed" });
-        }
-
-        if (aiResponse.intent === "search_recipes") {
-            const results = await searchPosts(
-                currentUserId,
-                aiResponse.data.filters,
-                0,
-                5
-            );
-
-            await appendAssistantMessage(
-                session.id,
-                `I found the following recipes based on your request:\n${JSON.stringify(results, null, 2)}`
-            );
-
-            return res.status(200).send({
-                sessionId: session.id,
-                intent: "search_recipes",
-                results
-            });
-        }
-
-        if (aiResponse.intent === "modify_recipe") {
-            return res.status(200).send({
-                sessionId: session.id,
-                intent: "modify_recipe",
-                recipe: aiResponse.data.recipe
-            });
-        }
-
-        if (aiResponse.intent === "general_question") {
-            return res.status(200).send({
-                sessionId: session.id,
-                intent: "general_question",
-                answer: aiResponse.data.answer
-            });
-        }
-
-        res.status(400).send({ error: "Unknown intent" });
-    } catch (err) {
-        console.error(err);
-        res.status(500).send({ error: "Internal server error" });
+    if (!session) {
+        session = await createSession();
     }
+
+    await appendUserMessage(session.id, message);
+
+    const aiResponse = await processChefAI(session.id, message);
+
+    if (!aiResponse) {
+        return res.status(500).send({ error: "AI processing failed" });
+    }
+
+    if (aiResponse.intent === "search_recipes") {
+        const results = await searchPosts(
+            currentUserId,
+            aiResponse.data.filters,
+            0,
+            5
+        );
+
+        await appendAssistantMessage(
+            session.id,
+            `I found the following recipes based on your request:\n${JSON.stringify(results, null, 2)}`
+        );
+
+        return res.status(200).send({
+            sessionId: session.id,
+            intent: "search_recipes",
+            results
+        });
+    }
+
+    if (aiResponse.intent === "modify_recipe") {
+        return res.status(200).send({
+            sessionId: session.id,
+            intent: "modify_recipe",
+            recipe: aiResponse.data.recipe
+        });
+    }
+
+    if (aiResponse.intent === "general_question") {
+        return res.status(200).send({
+            sessionId: session.id,
+            intent: "general_question",
+            answer: aiResponse.data.answer
+        });
+    }
+
+    res.status(400).send({ error: "Unknown intent" });
 });
 
 export = chefaiRouter;

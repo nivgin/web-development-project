@@ -110,7 +110,5 @@ export const searchPosts = async (
         match.$and = andConditions;
     }
 
-    console.log(JSON.stringify(match, null, 2));
-
     return await postModel.getPosts(currentUserId, match, skip, limit);
 };

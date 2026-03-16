@@ -139,11 +139,11 @@ postRouter.get('/', async (req, res) => {
     }
 
     if (sender) {
-        const posts = await getPostsBySender(sender, req.user?._id, skip, limit, search);
+        const posts = await getPostsBySender(sender, req.user!._id, skip, limit, search);
         return res.status(200).send(posts);
     }
 
-    const posts = await getPosts(req.user?._id, skip, limit, search);
+    const posts = await getPosts(req.user!._id, skip, limit, search);
     return res.status(200).send(posts);
 });
 /**
@@ -218,7 +218,7 @@ postRouter.get('/:id', async (req, res) => {
         return res.status(400).send('Invalid Post Id');
     }
 
-    const post = await getPostById(id, req.user?._id);
+    const post = await getPostById(id, req.user!._id);
 
     if (!post) {
         return res.status(404).send('Post Not Found');
@@ -307,7 +307,7 @@ postRouter.put('/:id', async (req, res) => {
         return res.status(400).send('Invalid Post');
     }
 
-    const existingPost = await getPostById(id, req.user?._id);
+    const existingPost = await getPostById(id, req.user!._id);
 
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
@@ -354,13 +354,13 @@ postRouter.put('/:id', async (req, res) => {
 postRouter.post('/:id/like', async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const existingPost = await getPostById(id, req.user?._id);
+    const existingPost = await getPostById(id, req.user!._id);
 
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
     }
 
-    await likePost(id, req.user?._id);
+    await likePost(id, req.user!._id);
 
     return res.sendStatus(200);
 })
@@ -390,13 +390,13 @@ postRouter.post('/:id/like', async (req: Request, res: Response) => {
 postRouter.post('/:id/unlike', async (req: Request, res: Response) => {
     const id = req.params.id;
 
-    const existingPost = await getPostById(id, req.user?._id);
+    const existingPost = await getPostById(id, req.user!._id);
 
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
     }
 
-    await unlikePost(id, req.user?._id);
+    await unlikePost(id, req.user!._id);
 
     return res.sendStatus(200);
 });
