@@ -41,7 +41,8 @@ export const processChefAI = async (sessionId: string, message: string) => {
     const aiResponse = await callChefAI(
         message,
         session.messages.map(m => ({ role: m.role, content: m.content })),
-        categories
+        categories,
+        session.hasRecipes
     );
 
     if (aiResponse.intent !== "search_recipes") {
@@ -50,6 +51,10 @@ export const processChefAI = async (sessionId: string, message: string) => {
 
     return aiResponse;
 };
+
+export const foundRecipes = async (sessionId: string, hasRecipes: boolean) => {
+    await chatSession.findByIdAndUpdate(sessionId, { hasRecipes: hasRecipes });
+}
 
 export const searchPosts = async (
     currentUserId: string,

@@ -5,7 +5,8 @@ import {
     appendUserMessage,
     appendAssistantMessage,
     processChefAI,
-    searchPosts
+    searchPosts,
+    foundRecipes
 } from "../controllers/chefai";
 
 const chefaiRouter = express.Router();
@@ -35,6 +36,10 @@ chefaiRouter.post("/", async (req, res) => {
             0,
             5
         );
+
+        if (results.length > 0) {
+            foundRecipes(session.id, true)
+        }
 
         await appendAssistantMessage(
             session.id,
