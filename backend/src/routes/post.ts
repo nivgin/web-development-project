@@ -1,5 +1,14 @@
 import express, { Request, Response } from "express";
-import { createPost, getPosts, getPostById, getPostsBySender, updatePost, likePost, unlikePost } from "../controllers/post";
+import {
+    createPost,
+    getPosts,
+    getPostById,
+    getPostsBySender,
+    updatePost,
+    likePost,
+    unlikePost,
+    getCategories
+} from "../controllers/post";
 import { isValidObjectId } from "mongoose";
 
 const postRouter = express.Router();
@@ -33,21 +42,49 @@ const postRouter = express.Router();
  *               example: "Invalid Post"
  */
 postRouter.post('/', async (req: Request, res: Response) => {
-    if (!req.body) {
-        return res.status(400).send('Missing Body');
-    }
-    
-    const sender = req.user;
-    const { title, content, imageUrl } = req.body;
+    if (!req.body) return res.status(400).send('Missing Body');
 
-    if (!title || !content || !sender || !imageUrl) {
+    const sender = req.user;
+
+    const {
+        title,
+        content,
+        imageUrl,
+        ingredients,
+        instructions,
+        servings,
+        time,
+        category
+    } = req.body;
+
+    if (
+        !sender ||
+        !title ||
+        !content ||
+        !imageUrl ||
+        !Array.isArray(ingredients) ||
+        !Array.isArray(instructions) ||
+        typeof servings !== "number" ||
+        typeof time !== "number" ||
+        !category
+    ) {
         return res.status(400).send('Invalid Post');
     }
 
-    const post = await createPost(title, sender._id, content, imageUrl);
+    const post = await createPost(
+        title,
+        sender._id,
+        content,
+        imageUrl,
+        ingredients,
+        instructions,
+        servings,
+        time,
+        category
+    );
 
     return res.status(200).send(post);
-})
+});
 
 /**
  * @swagger
@@ -94,21 +131,50 @@ postRouter.get('/', async (req, res) => {
     const search = req.query.search as string;
     const page = parseInt(req.query.page as string);
     const limit = parseInt(req.query.limit as string);
-    let skip;
+
+    let skip: number | undefined;
 
     if (!isNaN(page) && !isNaN(limit)) {
         skip = (page - 1) * limit;
     }
 
     if (sender) {
-        const posts = await getPostsBySender(sender, req.user?._id, skip, limit, search);
+        const posts = await getPostsBySender(sender, req.user!._id, skip, limit, search);
         return res.status(200).send(posts);
     }
 
-    const posts = await getPosts(req.user?._id, skip, limit, search);
+    const posts = await getPosts(req.user!._id, skip, limit, search);
     return res.status(200).send(posts);
 });
+/**
+ * @swagger
+ * /posts/categories:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get all categories
+ *     description: Retrieve a list of all categories sorted alphabetically.
+ *     responses:
+ *       200:
+ *         description: List of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Category'
+ *       500:
+ *         description: Failed to fetch categories
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Failed to fetch categories"
+ */
+postRouter.get("/categories", async (req, res) => {
+    const categories = await getCategories();
 
+    return res.status(200).send(categories);
+});
 /**
  * @swagger
  * /post/{id}:
@@ -149,17 +215,17 @@ postRouter.get('/:id', async (req, res) => {
     const id = req.params.id;
 
     if (!isValidObjectId(id)) {
-        res.status(400).send('Invalid Post Id')
+        return res.status(400).send('Invalid Post Id');
     }
 
-    const post = await getPostById(id, req.user?._id);
+    const post = await getPostById(id, req.user!._id);
 
     if (!post) {
-        res.status(404).send('Post Not Found');
+        return res.status(404).send('Post Not Found');
     }
 
-    res.status(200).send(post);
-})
+    return res.status(200).send(post);
+});
 
 /**
  * @swagger
@@ -204,7 +270,8 @@ postRouter.get('/:id', async (req, res) => {
  *               example: "Post Not Found"
  */
 postRouter.put('/:id', async (req, res) => {
-    const id = req.params.id; 
+    const id = req.params.id;
+
     if (!isValidObjectId(id)) {
         return res.status(400).send('Invalid Post Id');
     }
@@ -213,35 +280,51 @@ postRouter.put('/:id', async (req, res) => {
         return res.status(400).send('Missing Body');
     }
 
-    const sender = req.user
-    const { title, content } = req.body;
+    const sender = req.user;
 
-    if (!title || !sender || !content) {
+    const {
+        title,
+        content,
+        imageUrl,
+        ingredients,
+        instructions,
+        servings,
+        time,
+        category
+    } = req.body;
+
+    if (
+        !sender ||
+        !title ||
+        !content ||
+        !imageUrl ||
+        !Array.isArray(ingredients) ||
+        !Array.isArray(instructions) ||
+        typeof servings !== "number" ||
+        typeof time !== "number" ||
+        !category
+    ) {
         return res.status(400).send('Invalid Post');
     }
 
-    const existingPost = await getPostById(id, req.user?._id)
-    
+    const existingPost = await getPostById(id, req.user!._id);
+
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
     }
 
-    if (sender._id != existingPost.sender) {
+    if (sender._id != existingPost.sender.toString()) {
         return res.status(400).send('Unauthorized');
     }
 
-    const post = {
+    const updatedPost = await updatePost(id, {
         ...req.body,
-        "sender": sender._id
-    }
+        sender: sender._id
+    });
 
-    const updatedPost = await updatePost(id, post);
+    return res.status(200).send(updatedPost);
+});
 
-    if (!updatedPost) {
-        return res.status(404).send('Post Not Found');
-    }
-    res.status(200).send(updatedPost);
-})
 /**
  * @swagger
  * /post/{id}/like:
@@ -270,13 +353,14 @@ postRouter.put('/:id', async (req, res) => {
 
 postRouter.post('/:id/like', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const existingPost = await getPostById(id, req.user?._id)
-    
+
+    const existingPost = await getPostById(id, req.user!._id);
+
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
     }
 
-    await likePost(id, req.user?._id)
+    await likePost(id, req.user!._id);
 
     return res.sendStatus(200);
 })
@@ -305,15 +389,16 @@ postRouter.post('/:id/like', async (req: Request, res: Response) => {
  */
 postRouter.post('/:id/unlike', async (req: Request, res: Response) => {
     const id = req.params.id;
-    const existingPost = await getPostById(id, req.user?._id)
-    
+
+    const existingPost = await getPostById(id, req.user!._id);
+
     if (!existingPost) {
         return res.status(404).send('Post Not Found');
     }
 
-    await unlikePost(id, req.user?._id)
+    await unlikePost(id, req.user!._id);
 
     return res.sendStatus(200);
-})
+});
 
-export default postRouter
+export default postRouter;

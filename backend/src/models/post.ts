@@ -1,23 +1,33 @@
 import mongoose from 'mongoose';
 
 interface IPost {
-    sender: mongoose.Types.ObjectId,
-    title: string,
-    content: string,
-    imageUrl: string,
-    likes: mongoose.Types.ObjectId[],
-    commentCount: number
+    sender: mongoose.Types.ObjectId;
+    title: string;
+    content: string;
+    imageUrl: string;
+    likes: mongoose.Types.ObjectId[];
+    commentCount: number;
+    ingredients: string[];
+    instructions: string[];
+    servings: number;
+    time: number;
+    category: string;
 }
 
 interface IPostDTO {
-    _id: mongoose.Types.ObjectId,
-    sender: mongoose.Types.ObjectId,
-    title: string,
-    content: string,
-    imageUrl: string,
-    likeCount: number,
-    isLiked: boolean,
-    commentCount: number
+    _id: mongoose.Types.ObjectId;
+    sender: mongoose.Types.ObjectId;
+    title: string;
+    content: string;
+    imageUrl: string;
+    likeCount: number;
+    isLiked: boolean;
+    commentCount: number;
+    ingredients: string[];
+    instructions: string[];
+    servings: number;
+    time: number;
+    category: string;
 }
 
 const postSchema = new mongoose.Schema<IPost>({
@@ -46,10 +56,35 @@ const postSchema = new mongoose.Schema<IPost>({
     commentCount: {
         type: Number,
         default: 0
+    },
+    ingredients: {
+        type: [String],
+        required: true
+    },
+    instructions: {
+        type: [String],
+        required: true
+    },
+    servings: {
+        type: Number,
+        required: true
+    },
+    time: {
+        type: Number,
+        required: true
+    },
+    category: {
+        type: String,
+        required: true
     }
 });
 
-postSchema.statics.getPosts = async function(currentUserId: string, match: object, skip?: number, limit?: number): Promise<IPostDTO[]> {
+postSchema.statics.getPosts = async function (
+    currentUserId: string,
+    match: object,
+    skip?: number,
+    limit?: number
+): Promise<IPostDTO[]> {
 
     return this.aggregate([
         { $match: match },
@@ -71,13 +106,13 @@ postSchema.statics.getPosts = async function(currentUserId: string, match: objec
     ]);
 };
 
-postSchema.statics.likePost = async function(postId: string, userId: string): Promise<void> {
+postSchema.statics.likePost = async function (postId: string, userId: string): Promise<void> {
     await this.findByIdAndUpdate(postId, {
         $addToSet: { likes: new mongoose.Types.ObjectId(userId) }
     });
 };
 
-postSchema.statics.unlikePost = async function(postId: string, userId: string): Promise<void> {
+postSchema.statics.unlikePost = async function (postId: string, userId: string): Promise<void> {
     await this.findByIdAndUpdate(postId, {
         $pull: { likes: new mongoose.Types.ObjectId(userId) }
     });

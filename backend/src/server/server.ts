@@ -10,6 +10,7 @@ import userRouter from "../routes/user";
 import authRouter from "../routes/auth";
 import fileRouter from "../routes/file"
 import authenticate from "../middlewares/authenticate";
+import chefaiRouter from "../routes/chefai";
 
 export enum Mode {
   PROD = 'production',
@@ -48,6 +49,7 @@ export const createApp = async (appMmode?: Mode) => {
     app.use('/post', authenticate, postRouter);
     app.use('/comment', authenticate, commentRouter)
     app.use('/user', authenticate, userRouter);
+    app.use('/chefai', authenticate, chefaiRouter)
     app.use('/file', fileRouter)
 
     return app;

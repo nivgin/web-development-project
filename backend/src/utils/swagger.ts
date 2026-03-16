@@ -114,51 +114,111 @@ const options = {
           type: "object",
           required: ["refreshToken"],
           properties: {
-            refreshToken: {
-              type: "string",
-              example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-            }
+            refreshToken: { type: "string", example: "eyJhbGciOi..." }
           }
         },
         AuthTokens: {
           type: "object",
           properties: {
-            accessToken: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." },
-            refreshToken: { type: "string", example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." }
+            accessToken: { type: "string", example: "eyJhbGciOi..." },
+            refreshToken: { type: "string", example: "eyJhbGciOi..." }
           }
         },
         CreatePostRequest: {
           type: "object",
-          required: ["title", "content"],
+          required: [
+            "title",
+            "content",
+            "imageUrl",
+            "ingredients",
+            "instructions",
+            "servings",
+            "time",
+            "category"
+          ],
           properties: {
-            title: { type: "string", example: "My first post" },
-            content: { type: "string", example: "This is the content of the post." },
-            imageUrl: { type: "string", example: "http://localhost:8000/image.png" }
+            title: { type: "string", example: "Perfect Homemade Pizza" },
+            content: { type: "string", example: "This is my favorite pizza recipe..." },
+            imageUrl: { type: "string", example: "http://localhost:8000/pizza.png" },
+            ingredients: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Flour", "Tomato sauce", "Cheese"]
+            },
+            instructions: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Mix dough", "Spread sauce", "Bake 15 minutes"]
+            },
+            servings: { type: "number", example: 4 },
+            time: { type: "number", example: 20 },
+            category: { type: "string", example: "Dinner" }
           }
         },
         UpdatePostRequest: {
           type: "object",
-          required: ["title", "content"],
+          required: [
+            "title",
+            "content",
+            "imageUrl",
+            "ingredients",
+            "instructions",
+            "servings",
+            "time",
+            "category"
+          ],
           properties: {
-            title: { type: "string", example: "Updated post title" },
-            content: { type: "string", example: "Updated content of the post." }
+            title: { type: "string", example: "Updated Pizza Recipe" },
+            content: { type: "string", example: "Updated content..." },
+            imageUrl: { type: "string", example: "http://localhost:8000/newpizza.png" },
+            ingredients: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Flour", "Mozzarella", "Basil"]
+            },
+            instructions: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Prepare dough", "Add toppings", "Bake 12 minutes"]
+            },
+            servings: { type: "number", example: 2 },
+            time: { type: "number", example: 15 },
+            category: { type: "string", example: "Lunch" }
           }
         },
         Post: {
           type: "object",
           properties: {
             _id: { type: "string", example: "65b7c9c8e2f0a9a1f2c9d111" },
-            title: { type: "string", example: "My first post" },
-            content: { type: "string", example: "This is the content of the post." },
-            sender: { type: "string", example: "65b7c9c8e2f0a9a1f2c9d111" }
+            title: { type: "string", example: "Perfect Homemade Pizza" },
+            content: { type: "string", example: "This is my favorite pizza recipe..." },
+            sender: { type: "string", example: "65b7c9c8e2f0a9a1f2c9d111" },
+            imageUrl: { type: "string", example: "http://localhost:8000/pizza.png" },
+            ingredients: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Flour", "Tomato sauce", "Cheese"]
+            },
+            instructions: {
+              type: "array",
+              items: { type: "string" },
+              example: ["Mix dough", "Spread sauce", "Bake 15 minutes"]
+            },
+            servings: { type: "number", example: 4 },
+            time: { type: "number", example: 20 },
+            category: { type: "string", example: "Dinner" },
+            likeCount: { type: "number", example: 12 },
+            isLiked: { type: "boolean", example: true },
+            commentCount: { type: "number", example: 3 }
           }
         },
+
         CreateCommentRequest: {
           type: "object",
           required: ["postId", "content"],
           properties: {
             postId: { type: "string", example: "65b7c9c8e2f0a9a1f2c9d111" },
-            content: { type: "string", example: "This is a great post!" }
+            content: { type: "string", example: "This looks delicious!" }
           }
         },
         UpdateCommentRequest: {
@@ -190,7 +250,7 @@ const options = {
       },
     },
   },
-  apis: ['./src/routes/*.ts'], // paths to files containing OpenAPI definitions
+  apis: ['./src/routes/*.ts'],
 };
 
 const specs = swaggerJsdoc(options);

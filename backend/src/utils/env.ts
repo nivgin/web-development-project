@@ -17,6 +17,7 @@ const env = {
     DATABASE_URI: process.env.DATABASE_URI || 'mongodb://localhost:27017',
     ACCESS_TOKEN_SECRET: requiredEnvVar("ACCESS_TOKEN_SECRET"),
     REFRESH_TOKEN_SECRET: requiredEnvVar("REFRESH_TOKEN_SECRET"),
+    OPENAI_API_KEY: requiredEnvVar("OPENAI_API_KEY"),
     JWT_TOKEN_EXPIRATION: requiredEnvVar("JWT_TOKEN_EXPIRATION") as StringValue
 }
 
