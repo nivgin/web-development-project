@@ -17,7 +17,7 @@ export const card: SxProps = {
 };
 
 export const cardMedia: SxProps = {
-  height: '13.5em',
+  height: '17.5em',
   flexShrink: 0,
 };
 
@@ -34,7 +34,7 @@ export const title: SxProps = {
 export const description: SxProps = {
   color: 'text.secondary',
   mt: 0.5,
-  mb: 1.5,
+  mb: 1,
   fontSize: '0.8rem',
   lineHeight: 1.4,
   height: '2.8em',
@@ -42,6 +42,11 @@ export const description: SxProps = {
   WebkitLineClamp: 2,
   WebkitBoxOrient: 'vertical',
   overflow: 'hidden',
+};
+
+export const cardContent: SxProps = {
+  p: 2,
+  "&:last-child": { pb: 1.5 },
 };
 
 export const metaRow: SxProps = {

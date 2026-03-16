@@ -7,6 +7,7 @@ import { NavBar } from "./components/Navbar/Navbar";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./hooks/useAuth";
 import FeedPage from "./pages/FeedPage/FeedPage";
+import AskTheChefPage from "./pages/AskTheChefPage/AskTheChefPage";
 
 export default function App() {
   return (
@@ -33,6 +34,7 @@ function AppContent() {
       <Routes>
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/" element={<ProtectedRoute><FeedPage></FeedPage></ProtectedRoute>}/>
+        <Route path="/search" element={<ProtectedRoute><AskTheChefPage></AskTheChefPage></ProtectedRoute>}/>
       </Routes>
     </>
   );
