@@ -20,10 +20,23 @@ const testUser = {
 };
 
 const testPost = {
-    title: "Test Post",
-    content: "This is a test post content",
+    title: "Test Recipe",
+    content: "This is a test recipe used for API testing.",
     sender: "",
-    imageUrl: "image.png"
+    imageUrl: "test-image.png",
+    ingredients: [
+        "1 cup flour",
+        "2 eggs",
+        "1 tbsp sugar"
+    ],
+    instructions: [
+        "Mix all ingredients together.",
+        "Heat a pan over medium heat.",
+        "Cook until golden brown."
+    ],
+    servings: 2,
+    time: 15,
+    category: "Breakfast"
 };
 
 const testComment = {

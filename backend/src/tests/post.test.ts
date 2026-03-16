@@ -17,10 +17,23 @@ const testUser = {
 };
 
 const testPost = {
-    title: "titletest",
-    content: "this is content",
-    imageUrl: "image.png"
-}
+    title: "title",
+    content: "This is a test recipe used for API testing.",
+    imageUrl: "test-image.png",
+    ingredients: [
+        "1 cup flour",
+        "2 eggs",
+        "1 tbsp sugar"
+    ],
+    instructions: [
+        "Mix all ingredients together.",
+        "Heat a pan over medium heat.",
+        "Cook until golden brown."
+    ],
+    servings: 2,
+    time: 15,
+    category: "Breakfast"
+};
 
 const badPost = {
     title: "titletest",
@@ -86,7 +99,20 @@ describe("Get Posts", () => {
                 sender: new mongoose.Types.ObjectId(),
                 title: "secret post",
                 imageUrl: "secret.png",
-                content: "this is post by secret user"
+                content: "this is post by secret user",
+                ingredients: [
+                    "1 cup flour",
+                    "2 eggs",
+                    "1 tbsp sugar"
+                ],
+                instructions: [
+                    "Mix all ingredients together.",
+                    "Heat a pan over medium heat.",
+                    "Cook until golden brown."
+                ],
+                servings: 2,
+                time: 15,
+                category: "Breakfast"
             }
         ]);
     });
@@ -205,7 +231,20 @@ describe("Update Post By Id", () => {
         const updatedPost = {
             title: "newtitle",
             content: "Updated post content",
-            imageUrl: "newimage.png"
+            imageUrl: "newimage.png",
+            ingredients: [
+                "1 cup flour",
+                "3 eggs",
+                "1 tbsp sugar"
+            ],
+            instructions: [
+                "Mix all ingredients together.",
+                "Heat a pan over medium heat.",
+                "Cook until golden brown."
+            ],
+            servings: 2,
+            time: 15,
+            category: "Breakfast"
         };
         const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(200);
         expect(response.body).toBeDefined();
@@ -241,7 +280,21 @@ describe("Update Post By Id", () => {
     it("should return 404 for non-existent post ID", async () => {
         const updatedPost = {
             title: "newtitle",
-            content: "Updated post content"
+            content: "Updated post content",
+            imageUrl: "newimage.png",
+            ingredients: [
+                "1 cup flour",
+                "3 eggs",
+                "1 tbsp sugar"
+            ],
+            instructions: [
+                "Mix all ingredients together.",
+                "Heat a pan over medium heat.",
+                "Cook until golden brown."
+            ],
+            servings: 2,
+            time: 15,
+            category: "Breakfast"
         };
         const nonExistentId = new mongoose.Types.ObjectId().toString();
         const response = await request.put(`/post/${nonExistentId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(404);
@@ -251,7 +304,21 @@ describe("Update Post By Id", () => {
     it("Block user from editing other user's post", async () => {
         const updatedPost = {
             title: "newtitle",
-            content: "Updated post content"
+            content: "Updated post content",
+            imageUrl: "newimage.png",
+            ingredients: [
+                "1 cup flour",
+                "3 eggs",
+                "1 tbsp sugar"
+            ],
+            instructions: [
+                "Mix all ingredients together.",
+                "Heat a pan over medium heat.",
+                "Cook until golden brown."
+            ],
+            servings: 2,
+            time: 15,
+            category: "Breakfast"
         };
         const nonExistentId = new mongoose.Types.ObjectId().toString();
         const post = await postModel.create({ ...testPost, sender: nonExistentId });
