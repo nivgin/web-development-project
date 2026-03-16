@@ -6,7 +6,8 @@ import {
     getPostsBySender,
     updatePost,
     likePost,
-    unlikePost
+    unlikePost,
+    getCategories
 } from "../controllers/post";
 import { isValidObjectId } from "mongoose";
 
@@ -145,7 +146,35 @@ postRouter.get('/', async (req, res) => {
     const posts = await getPosts(req.user?._id, skip, limit, search);
     return res.status(200).send(posts);
 });
+/**
+ * @swagger
+ * /posts/categories:
+ *   get:
+ *     tags: [Categories]
+ *     summary: Get all categories
+ *     description: Retrieve a list of all categories sorted alphabetically.
+ *     responses:
+ *       200:
+ *         description: List of categories
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 $ref: '#/components/schemas/Category'
+ *       500:
+ *         description: Failed to fetch categories
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Failed to fetch categories"
+ */
+postRouter.get("/categories", async (req, res) => {
+    const categories = await getCategories();
 
+    return res.status(200).send(categories);
+});
 /**
  * @swagger
  * /post/{id}:

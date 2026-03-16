@@ -1,3 +1,4 @@
+import categoryModel from '../models/category';
 import postModel from '../models/post';
 import { IPost } from '../models/post';
 import mongoose from 'mongoose';
@@ -76,3 +77,8 @@ export const likePost = async (postId: string, userId: string) => {
 export const unlikePost = async (postId: string, userId: string) => {
     return await postModel.unlikePost(postId, userId);
 };
+
+export const getCategories = async () => {
+    const categories = await categoryModel.find();
+    return categories.map(c => c.name);
+}

@@ -6,6 +6,7 @@ import {
     PostMatchQuery,
     NotRegexCondition
 } from "../types/chefai";
+import { getCategories } from "./post";
 
 export const createSession = async () => {
     return await chatSession.create({ messages: [] });
@@ -35,9 +36,12 @@ export const processChefAI = async (sessionId: string, message: string) => {
     const session = await chatSession.findById(sessionId);
     if (!session) return null;
 
+    const categories = await getCategories();
+
     const aiResponse = await callChefAI(
         message,
-        session.messages.map(m => ({ role: m.role, content: m.content }))
+        session.messages.map(m => ({ role: m.role, content: m.content })),
+        categories
     );
 
     if (aiResponse.intent !== "search_recipes") {

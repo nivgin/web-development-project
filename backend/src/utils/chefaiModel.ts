@@ -14,10 +14,13 @@ const client = new OpenAI({
 
 export async function callChefAI(
     userMessage: string,
-    history: ChatMessage[] = []
+    history: ChatMessage[] = [],
+    categories: string[] = []
 ) {
+    const prompt = CHEF_AI_PROMPT.replace("{{CATEGORIES}}", categories.join(", "));
+
     const messages = [
-        { role: "system" as const, content: CHEF_AI_PROMPT },
+        { role: "system" as const, content: prompt },
         ...history,
         { role: "user" as const, content: userMessage }
     ];

@@ -24,7 +24,7 @@ For search_recipes:
   "intent": "search_recipes",
   "data": {
     "filters": {
-      "category": string | null,        // e.g. "pasta", "dessert", "soup"
+      "category": string | null,  // Must be exactly one of: {{CATEGORIES}}. Use null if no category matches.
       "time": number | null,            // maximum cooking time in minutes as a plain integer (e.g. 15, 30). Never a string.
       "ingredientsInclude": string[] | null,  // ingredients the recipe MUST contain
       "ingredientsExclude": string[] | null,  // ingredients the recipe MUST NOT contain
@@ -43,7 +43,7 @@ For modify_recipe:
       "title": string,          // Update to reflect the modifications (e.g. "Chocolate Chip Pancakes" → "Banana Pancakes")
       "description": string,    // Rewrite to reflect the modified ingredients and flavor profile
       "image": string,          // Preserve the original image URL unchanged
-      "category": string,
+      "category": string | null,  // Must be exactly one of: {{CATEGORIES}}. Use null if no category matches.
       "time": string,
       "servings": number,
       "ingredients": string[],  // Apply all requested changes
@@ -76,6 +76,7 @@ Rules:
 - Always set "aiGenerated": true on any modified recipe.
 - Never infer or assume "ingredientsInclude" unless the user explicitly mentions specific ingredients. If the user only names a dish (e.g. "pancakes"), do not add any ingredients.
 - Never infer "category" unless the user explicitly states it.
+- "category" must be one of the allowed values or null. Only set it if the user explicitly names a category OR if the context strongly implies one (e.g. "something to eat in the morning" → "breakfast", "a small bite between meals" → "snack", "something for tonight's dinner" → "dinner"). Do NOT infer category from a dish name alone — "pancakes", "pasta", or "salad" do not imply a category by themselves.
 - Maintain conversation context, including previously provided recipes.
 - Keep general answers concise and factual.
 `;

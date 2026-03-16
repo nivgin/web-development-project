@@ -37,7 +37,6 @@ chefaiRouter.post("/", async (req, res) => {
                 5
             );
 
-            // Save search results into the session so the AI can reference them
             await appendAssistantMessage(
                 session.id,
                 `I found the following recipes based on your request:\n${JSON.stringify(results, null, 2)}`
