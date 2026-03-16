@@ -2,10 +2,10 @@ import { Box, Typography, ButtonBase } from "@mui/material";
 import { root, avatar, hero, subtitle, suggestionsLabel, suggestionChip, suggestionsGrid, suggestionsSection, title } from "./styles";
 
 const SUGGESTIONS = [
-  "What can I make with chicken and rice?",
-  "Quick 15-minute dinner ideas",
+  "What can I make with salmon and lemon?",
+  "Give me 15 minutes or less dinner ideas",
   "Best chocolate dessert recipe",
-  "Healthy breakfast bowls",
+  "Find me a recipe for breakfast",
 ];
 
 interface ChefHeroPromptProps {
