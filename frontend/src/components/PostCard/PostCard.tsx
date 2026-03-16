@@ -3,7 +3,7 @@ import { Card, CardMedia, CardContent, Typography, Box, Divider, IconButton } fr
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import FavoriteIcon from "@mui/icons-material/Favorite"
-import { card, title, description, metaRow, metaItem, cardMedia, divider } from "./styles";
+import { card, title, description, metaRow, metaItem, cardMedia, divider, cardContent } from "./styles";
 import type { Post } from "../../types/Post";
 import { useAPI } from "../../hooks/useApi";
 
@@ -38,7 +38,7 @@ const PostCard = ({ _id: id, title: postTitle, content: postDesc, likeCount: lik
   return (
     <Card sx={card}>
       <CardMedia component="img" sx={cardMedia} image={imageUrl} alt={postTitle} />
-      <CardContent>
+      <CardContent sx={cardContent}>
         <Typography variant="h6" sx={title}>
           {postTitle}
         </Typography>

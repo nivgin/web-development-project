@@ -22,3 +22,14 @@ export const wrapper: SxProps = {
     },
   },
 };
+
+export const submitBtn = {
+  backgroundColor: "primary.main",
+  color: "#f9f7f5",
+  borderRadius: "8px",
+  width: 32,
+  height: 32,
+  "&:hover": {
+    backgroundColor: "primary.dark",
+  },
+};
