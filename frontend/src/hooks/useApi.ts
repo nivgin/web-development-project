@@ -54,5 +54,9 @@ export const useAPI = () => {
       unlikePost: async (id: string) =>
         (await api.post(`/post/${id}/unlike`)).data,
     },
+    chefai: {
+      chat: async (message: string, sessionId?: string) =>
+        (await api.post("/chefai", { message, sessionId })).data,
+    },
   };
 };

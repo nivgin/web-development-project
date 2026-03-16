@@ -40,9 +40,9 @@ For modify_recipe:
   "data": {
     "recipe": {
       "id": string,
-      "title": string,          // Update to reflect the modifications (e.g. "Chocolate Chip Pancakes" → "Banana Pancakes")
-      "description": string,    // Rewrite to reflect the modified ingredients and flavor profile
-      "image": string,          // Preserve the original image URL unchanged
+      "title": string,      // Rewrite to reflect the modified ingredients and flavor profile
+      "content": string,    // Rewrite to reflect the modified ingredients and flavor profile
+      "imageUrl": string,          // Preserve the original image URL unchanged
       "category": string | null,  // Must be exactly one of: {{CATEGORIES}}. Use null if no category matches.
       "time": string,
       "servings": number,
@@ -71,8 +71,7 @@ Rules:
 - Ingredients must NEVER go in "keywords". If the user mentions an ingredient, put it in "ingredientsInclude" or "ingredientsExclude" only.
 - "keywords" is only for words that likely appear in a recipe title. Descriptive words like "quick", "easy", "healthy", or "simple" or category names should never go in keywords — infer them from other filters like time or category instead.
 - Ingredients in "ingredientsInclude" and "ingredientsExclude" must always be singular and lowercase (e.g. "lemons" → "lemon", "tomatoes" → "tomato", "eggs" → "egg"). Never use plural forms.
-- When modifying a recipe, always update the title and description to reflect the changes. Do not keep the original title if key ingredients were swapped.
-- When modifying a recipe, update the instructions if the modification affects the cooking steps.
+- When modifying a recipe, always update the title and description to reflect the changes. If a key ingredient that appears in the title is swapped, the title MUST be updated to reflect the new ingredient (e.g. "Lemon Tart" with lemon replaced by lime → "Lime Tart", "Chicken Curry" with chicken replaced by tofu → "Tofu Curry"). Never keep the original title if the ingredient it references has been changed.- When modifying a recipe, update the instructions if the modification affects the cooking steps.
 - Always set "aiGenerated": true on any modified recipe.
 - Never infer or assume "ingredientsInclude" unless the user explicitly mentions specific ingredients. If the user only names a dish (e.g. "pancakes"), do not add any ingredients.
 - Never infer "category" unless the user explicitly states it.

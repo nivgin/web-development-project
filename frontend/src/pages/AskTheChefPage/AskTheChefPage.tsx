@@ -6,20 +6,22 @@ import ChefThinkingLoader from "../../components/ChefThinkingLoader/ChefThinking
 import ChefResponseBubble from "../../components/ChefResponseBubble/ChefResponseBubble";
 import UserBubble from "../../components/UserBubble/UserBubble";
 import { root, scrollArea, inner, chatArea, inputBar, inputInner } from "./styles";
-import { recipes } from "../../data/mockData";
 import type { ChatMessage } from "../../types/ChatMessage";
+import { useAPI } from "../../hooks/useApi";
 
 export default function AskTheChefPage() {
   const [input, setInput] = useState("");
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [isThinking, setIsThinking] = useState(false);
+  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const { chefai } = useAPI();
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, isThinking]);
 
-  const handleSend = (overrideText?: string) => {
+  const handleSend = async (overrideText?: string) => {
     const text = (overrideText ?? input).trim();
     if (!text || isThinking) return;
 
@@ -33,29 +35,54 @@ export default function AskTheChefPage() {
     setInput("");
     setIsThinking(true);
 
-    setTimeout(() => {
-      const q = text.toLowerCase();
-      const filtered = recipes.filter(
-        (r) =>
-          r.title.toLowerCase().includes(q) ||
-          r.description.toLowerCase().includes(q) ||
-          r.category.toLowerCase().includes(q) ||
-          r.ingredients.some((ing: string) => ing.toLowerCase().includes(q))
-      );
+    try {
+      const response = await chefai.chat(text, sessionId);
 
-      const chefMessage: ChatMessage = {
-        id: crypto.randomUUID(),
-        role: "chef",
-        text:
-          filtered.length > 0
-            ? `Great choice! I found ${filtered.length} recipe${filtered.length > 1 ? "s" : ""} for you. ${filtered[0].title} is a personal favourite — it only takes ${filtered[0].time} and serves ${filtered[0].servings}. Give it a try!`
-            : "Hmm, I don't have an exact match for that in my collection right now. Try asking about chicken, pasta, salmon, or desserts — I've got some wonderful recipes there!",
-        recipes: filtered.length > 0 ? filtered : undefined,
-      };
+      if (!sessionId) {
+        setSessionId(response.sessionId);
+      }
+
+      let chefMessage: ChatMessage;
+
+      if (response.intent === "search_recipes") {
+        const found = response.results ?? [];
+        chefMessage = {
+          id: crypto.randomUUID(),
+          role: "chef",
+          text:
+            found.length > 0
+              ? `Great choice! I found ${found.length} recipe${found.length > 1 ? "s" : ""} for you.`
+              : "Hmm, I don't have an exact match for that in my recipe book right now. Try asking about something else!",
+          recipes: found.length > 0 ? found : undefined,
+        };
+      } else if (response.intent === "modify_recipe") {
+        chefMessage = {
+          id: crypto.randomUUID(),
+          role: "chef",
+          text: "Here's your modified recipe!",
+          recipes: [response.recipe],
+        };
+      } else {
+        chefMessage = {
+          id: crypto.randomUUID(),
+          role: "chef",
+          text: response.answer,
+        };
+      }
 
       setMessages((prev) => [...prev, chefMessage]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: crypto.randomUUID(),
+          role: "chef",
+          text: "Sorry, something went wrong. Please try again!",
+        },
+      ]);
+    } finally {
       setIsThinking(false);
-    }, 1200);
+    }
   };
 
   const hasMessages = messages.length > 0;

@@ -13,7 +13,7 @@ export default function RecipeResultsGrid({ recipes }: RecipeResultsGridProps) {
   return (
     <Box sx={grid}>
       {recipes.map((recipe) => (
-        <RecipeResultCard key={recipe.id} recipe={recipe} />
+        <RecipeResultCard key={recipe._id} recipe={recipe} />
       ))}
     </Box>
   );
