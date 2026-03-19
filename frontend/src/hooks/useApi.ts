@@ -1,7 +1,7 @@
 import api from "./api-client";
 import type { User } from "../types/User";
 import type { LoginData, RegisterData, LoginResponse } from "../types/Auth";
-import type { Post } from "../types/Post";
+import type { Post, PostFull } from "../types/Post";
 
 export const useAPI = () => {
   return {
@@ -47,6 +47,9 @@ export const useAPI = () => {
             params: { search, page, limit },
           })
         ).data,
+
+      getPostById: async (id: string) =>
+        (await api.get<PostFull>(`/post/${id}`)).data,
 
       likePost: async (id: string) =>
         (await api.post(`/post/${id}/like`)).data,
