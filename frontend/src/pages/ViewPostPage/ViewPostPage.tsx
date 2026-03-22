@@ -1,7 +1,10 @@
 import { useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
-import { Box, CircularProgress, Typography } from "@mui/material";
+import { Box, CircularProgress } from "@mui/material";
 import { useAPI } from "../../hooks/useApi";
+import InstructionList from "../../components/InstructionList/InstructionList";
+import IngredientList from "../../components/IngredientList/IngredientList";
+import RecipeTitle from "../../components/RecipeTitle/RecipeTitle";
 
 export default function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -22,20 +25,13 @@ export default function ViewPostPage() {
   }
 
   return (
-    <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh", px: 2, py: 6 }}>
-      <Box sx={{ maxWidth: "100em", mx: "auto" }}>
-      <Box
-        component="img"
-        src={post?.imageUrl}
-        alt={post?.title}
-        sx={{ width: "100%", aspectRatio: "16 / 9", objectFit: "cover"}}
-      />
-      <Typography variant="h3" fontWeight="bold" sx={{ mt: 3 }}>
-        {post?.title}
-      </Typography>
-      <Typography variant="body1" sx={{ mt: 2, lineHeight: 1.8, color: "text.secondary" }}>
-        {post?.content}
-      </Typography>
+    <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
+      {post && <RecipeTitle post={post} />}
+
+      {/* Body section */}
+      <Box sx={{ maxWidth: "90em", mx: "auto", px: 2, py: 6 }}>
+        <IngredientList ingredients={post?.ingredients ?? []} />
+        <InstructionList instructions={post?.instructions ?? []} />
       </Box>
     </Box>
   );
