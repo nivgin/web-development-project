@@ -13,7 +13,6 @@ export const header: SxProps = {
 
 export const divider: SxProps = {
   mb: 2,
-  borderBottomWidth: 2,
 };
 
 export const stepIconProps: SxProps = {

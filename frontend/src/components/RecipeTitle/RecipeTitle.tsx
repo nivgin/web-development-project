@@ -1,15 +1,16 @@
 import { useState } from "react";
-import { Box, Divider, IconButton, Typography } from "@mui/material";
+import { Avatar, Box, Divider, IconButton, Typography } from "@mui/material";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import LocalDiningIcon from "@mui/icons-material/LocalDining";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import type { PostFull } from "../../types/Post";
+import type { User } from "../../types/User";
 import { useAPI } from "../../hooks/useApi";
 import * as styles from "./styles";
 
-export default function RecipeTitle({ post }: { post: PostFull }) {
+export default function RecipeTitle({ post, sender }: { post: PostFull; sender?: User }) {
   const api = useAPI();
   const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
   const [countOverride, setCountOverride] = useState<number | null>(null);
@@ -44,6 +45,13 @@ export default function RecipeTitle({ post }: { post: PostFull }) {
           sx={styles.image}
         />
         <Box sx={styles.textSide}>
+          <Box sx={styles.authorRow}>
+            <Avatar src={sender?.pfpUrl} alt={sender?.username ?? "Anonymous"} sx={styles.avatar} />
+            <Typography variant="body2" fontWeight="bold" color="text.secondary">
+              {sender?.username ?? "Anonymous"}
+            </Typography>
+          </Box>
+          <Divider sx={styles.authorDivider} />
           <Typography variant="h3" fontWeight="bold" sx={styles.title}>
             {post.title}
           </Typography>

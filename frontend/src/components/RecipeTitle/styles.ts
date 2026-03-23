@@ -33,6 +33,22 @@ export const textSide: SxProps = {
   justifyContent: "center",
 };
 
+export const authorRow: SxProps = {
+  display: "flex",
+  alignItems: "center",
+  gap: 1,
+  mb: 1.5,
+};
+
+export const authorDivider: SxProps = {
+  mb: 2,
+};
+
+export const avatar: SxProps = {
+  width: 36,
+  height: 36,
+};
+
 export const title: SxProps = {
   mb: 1.5,
 };

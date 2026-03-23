@@ -61,5 +61,9 @@ export const useAPI = () => {
       chat: async (message: string, sessionId?: string) =>
         (await api.post("/chefai", { message, sessionId })).data,
     },
+    users: {
+      getUserById: async (id: string) =>
+        (await api.get<User>(`/user/${id}`)).data,
+    },
   };
 };
