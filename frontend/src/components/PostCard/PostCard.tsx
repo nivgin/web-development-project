@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardMedia, CardContent, Typography, Box, Divider, IconButton } from "@mui/material";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -36,33 +37,35 @@ const PostCard = ({ _id: id, title: postTitle, content: postDesc, likeCount: lik
   };
 
   return (
-    <Card sx={card}>
-      <CardMedia component="img" sx={cardMedia} image={imageUrl} alt={postTitle} />
-      <CardContent sx={cardContent}>
-        <Typography variant="h6" sx={title}>
-          {postTitle}
-        </Typography>
-        <Typography variant="body2" sx={description}>
-          {postDesc}
-        </Typography>
-        <Divider sx={divider} />
-        <Box sx={metaRow}>
-            <IconButton
-              onClick={handleLikeToggle}
-              size="small"
-              disableRipple
-              sx={{ p: 0, color: liked ? "error.main" : "inherit" }}
-            >
-              {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
-              <Typography variant="body2">{likeCount}</Typography>
-            </IconButton>
-          <Box sx={metaItem}>
-            <ChatBubbleOutlineIcon fontSize="small" />
-            <Typography variant="body2">{comments}</Typography>
+    <Link to={`/post/${id}`} style={{ textDecoration: "none" }}>
+      <Card sx={card}>
+        <CardMedia component="img" sx={cardMedia} image={imageUrl} alt={postTitle} />
+        <CardContent sx={cardContent}>
+          <Typography variant="h6" sx={title}>
+            {postTitle}
+          </Typography>
+          <Typography variant="body2" sx={description}>
+            {postDesc}
+          </Typography>
+          <Divider sx={divider} />
+          <Box sx={metaRow}>
+              <IconButton
+                onClick={(e) => { e.preventDefault(); handleLikeToggle(); }}
+                size="small"
+                disableRipple
+                sx={{ p: 0, color: liked ? "error.main" : "inherit" }}
+              >
+                {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
+                <Typography variant="body2">{likeCount}</Typography>
+              </IconButton>
+            <Box sx={metaItem}>
+              <ChatBubbleOutlineIcon fontSize="small" />
+              <Typography variant="body2">{comments}</Typography>
+            </Box>
           </Box>
-        </Box>
-      </CardContent>
-    </Card>
+        </CardContent>
+      </Card>
+    </Link>
   );
 };
 
