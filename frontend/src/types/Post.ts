@@ -8,3 +8,11 @@ export type Post = {
     isLiked: boolean;
     commentCount: number;
 }
+
+export type PostFull = Post & {
+    ingredients: string[];
+    instructions: string[];
+    servings: number;
+    time: number;
+    category: string;
+}

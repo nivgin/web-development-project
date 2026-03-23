@@ -8,6 +8,7 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import { useAuth } from "./hooks/useAuth";
 import FeedPage from "./pages/FeedPage/FeedPage";
 import AskTheChefPage from "./pages/AskTheChefPage/AskTheChefPage";
+import ViewPostPage from "./pages/ViewPostPage/ViewPostPage";
 
 export default function App() {
   return (
@@ -35,6 +36,7 @@ function AppContent() {
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/" element={<ProtectedRoute><FeedPage></FeedPage></ProtectedRoute>}/>
         <Route path="/search" element={<ProtectedRoute><AskTheChefPage></AskTheChefPage></ProtectedRoute>}/>
+        <Route path="/post/:id" element={<ProtectedRoute><ViewPostPage /></ProtectedRoute>}/>
       </Routes>
     </>
   );
