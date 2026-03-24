@@ -49,7 +49,7 @@ export default function CommentList({ postId}: CommentListProps) {
       >
         <List disablePadding>
           {comments.map((comment) => (
-            <CommentItem key={comment._id} comment={comment} />
+            <CommentItem key={comment._id} content={comment.content} sender={comment.sender} />
           ))}
         </List>
       </InfiniteScroll>

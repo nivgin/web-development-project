@@ -60,7 +60,10 @@ export const useAPI = () => {
     },
     comments: {
       getCommentsByPostId: async (postId: string, page?: number, limit?: number) =>
-        (await api.get<Comment[]>("/comment", { params: { postId, page, limit } })).data,
+        (await api.get<Comment[]>("/comment", { params: { postId, page, limit, populateUsers: true } })).data,
+
+      publishComment: async (postId: string, content: string) =>
+        (await api.post<Comment>("/comment", { postId, content })).data,
     },
     chefai: {
       chat: async (message: string, sessionId?: string) =>

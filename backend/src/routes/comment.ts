@@ -90,7 +90,8 @@ commentRouter.get('/', async (req, res) => {
     }
 
     if (postId) {
-        const comments = await getCommentsByPostId(postId, skip, limit);
+        const populateUsers = req.query.populateUsers === 'true';
+        const comments = await getCommentsByPostId(postId, skip, limit, populateUsers);
         return res.status(200).send(comments);
     }
     const comments = await getComments();
