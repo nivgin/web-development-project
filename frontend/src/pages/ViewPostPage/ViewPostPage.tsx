@@ -5,6 +5,7 @@ import { useAPI } from "../../hooks/useApi";
 import InstructionList from "../../components/InstructionList/InstructionList";
 import IngredientList from "../../components/IngredientList/IngredientList";
 import RecipeTitle from "../../components/RecipeTitle/RecipeTitle";
+import CommentList from "../../components/CommentList/CommentList";
 
 export default function ViewPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,7 @@ export default function ViewPostPage() {
       <Box sx={{ maxWidth: "90em", mx: "auto", px: 2, py: 6 }}>
         <IngredientList ingredients={post?.ingredients ?? []} />
         <InstructionList instructions={post?.instructions ?? []} />
+        {id && <CommentList postId={id} />}
       </Box>
     </Box>
   );

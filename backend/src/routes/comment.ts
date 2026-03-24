@@ -80,13 +80,21 @@ commentRouter.post('/', async (req, res) => {
  */
 commentRouter.get('/', async (req, res) => {
     const postId = req.query.postId as string;
+    const page = parseInt(req.query.page as string);
+    const limit = parseInt(req.query.limit as string);
+
+    let skip: number | undefined;
+
+    if (!isNaN(page) && !isNaN(limit)) {
+        skip = (page - 1) * limit;
+    }
 
     if (postId) {
-        const comments = await getCommentsByPostId(postId);
+        const comments = await getCommentsByPostId(postId, skip, limit);
         return res.status(200).send(comments);
     }
     const comments = await getComments();
-    
+
     res.status(200).send(comments);
 })
 
