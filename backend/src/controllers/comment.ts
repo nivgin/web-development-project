@@ -25,6 +25,15 @@ export const updateComment = async (commentId: string, content: string) => {
     return await commentModel.findByIdAndUpdate(commentId, { content }, { new: true });
 }
 
-export const getCommentsByPostId = async (postId: string) => {
-    return await commentModel.find({ postId: postId });
+export const getCommentsByPostId = async (postId: string, skip?: number, limit?: number, populateUsers?: boolean) => {
+    const query = commentModel
+        .find({ postId })
+        .skip((!skip || isNaN(skip)) ? 0 : skip)
+        .limit((!limit || isNaN(limit)) ? 10 : limit);
+
+    if (populateUsers) {
+        query.populate('sender', 'username pfpUrl');
+    }
+
+    return await query;
 }
