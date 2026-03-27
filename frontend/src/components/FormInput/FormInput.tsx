@@ -9,6 +9,10 @@ interface FormInputProps<T extends FieldValues> {
   type?: string;
   accept?: string;
   icon?: React.ReactNode;
+  multiline?: boolean;
+  rows?: number;
+  minRows?: number;
+  textareaStyle?: React.CSSProperties;
 }
 
 export const FormInput = <T extends FieldValues>({
@@ -17,6 +21,10 @@ export const FormInput = <T extends FieldValues>({
   label,
   type = "text",
   icon,
+  multiline,
+  rows,
+  minRows,
+  textareaStyle,
 }: FormInputProps<T>) => {
   return (
     <Controller
@@ -29,6 +37,9 @@ export const FormInput = <T extends FieldValues>({
           type={type}
           fullWidth
           margin="normal"
+          multiline={multiline}
+          rows={rows}
+          minRows={minRows}
           error={!!error}
           helperText={error?.message}
           onChange={(e) => {
@@ -44,6 +55,7 @@ export const FormInput = <T extends FieldValues>({
                 <InputAdornment position="start">{icon}</InputAdornment>
               ) : undefined,
             },
+            htmlInput: textareaStyle ? { style: textareaStyle } : undefined,
           }}
         />
       )}

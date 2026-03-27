@@ -37,7 +37,7 @@ export const useAPI = () => {
     },
     posts: {
       getCategories: async () =>
-        (await api.get<{ _id: string; name: string }[]>("/post/categories")).data,
+        (await api.get<string[]>("/post/categories")).data,
 
       getPosts: async (search?: string, page?: number, limit?: number) =>
         (
