@@ -9,6 +9,7 @@ import { useAuth } from "./hooks/useAuth";
 import FeedPage from "./pages/FeedPage/FeedPage";
 import AskTheChefPage from "./pages/AskTheChefPage/AskTheChefPage";
 import ViewPostPage from "./pages/ViewPostPage/ViewPostPage";
+//import UploadPostPage from "./pages/UploadPostPage/UploadPostPage";
 
 export default function App() {
   return (

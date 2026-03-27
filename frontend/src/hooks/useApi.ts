@@ -1,7 +1,8 @@
 import api from "./api-client";
 import type { User } from "../types/User";
 import type { LoginData, RegisterData, LoginResponse } from "../types/Auth";
-import type { Post, PostFull } from "../types/Post";
+import type { Post, PostFull, CreatePostData } from "../types/Post";
+import { uploadFile } from "../utils/uploadFile";
 import type { Comment } from "../types/Comment";
 
 export const useAPI = () => {
@@ -14,14 +15,7 @@ export const useAPI = () => {
         let pfpUrl: string | undefined;
 
         if (data.profilePicture) {
-          const formData = new FormData();
-          formData.append("file", data.profilePicture);
-
-          const upload = await api.post<{ url: string }>("/file", formData, {
-            headers: { "Content-Type": "multipart/form-data" },
-          });
-
-          pfpUrl = upload.data.url;
+          pfpUrl = await uploadFile(data.profilePicture);
         }
 
         return (
@@ -42,6 +36,9 @@ export const useAPI = () => {
         (await api.get<User>(`/user/${username}`)).data,
     },
     posts: {
+      getCategories: async () =>
+        (await api.get<{ _id: string; name: string }[]>("/post/categories")).data,
+
       getPosts: async (search?: string, page?: number, limit?: number) =>
         (
           await api.get<Post[]>("/post", {
@@ -51,6 +48,11 @@ export const useAPI = () => {
 
       getPostById: async (id: string) =>
         (await api.get<PostFull>(`/post/${id}`)).data,
+
+      createPost: async ({ image, ...rest }: CreatePostData) => {
+        const imageUrl = await uploadFile(image);
+        return (await api.post<Post>("/post", { ...rest, imageUrl })).data;
+      },
 
       likePost: async (id: string) =>
         (await api.post(`/post/${id}/like`)).data,
