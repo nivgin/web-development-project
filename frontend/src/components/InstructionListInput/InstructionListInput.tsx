@@ -1,9 +1,10 @@
-import { Box, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack, Typography } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useFieldArray } from "react-hook-form";
-import type { Control } from "react-hook-form";
+import type { Control, Path } from "react-hook-form";
 import type { PostFormSchema } from "../PostForm/PostForm";
+import { FormInput } from "../FormInput/FormInput";
 
 interface InstructionListInputProps {
   control: Control<PostFormSchema>;
@@ -19,19 +20,20 @@ export default function InstructionListInput({ control }: InstructionListInputPr
     <Box>
       <Stack spacing={1}>
         {fields.map((field, index) => (
-          <Stack key={field.id} direction="row" spacing={1} alignItems="center">
+          <Stack key={field.id} direction="row" spacing={1} alignItems="flex-start">
             <Typography
               variant="body2"
               fontWeight={600}
-              sx={{ minWidth: 24, color: "text.secondary" }}
+              sx={{ minWidth: 24, color: "text.secondary", pt: "9px" }}
             >
               {index + 1}.
             </Typography>
-            <TextField
-              {...control.register(`instructions.${index}.value`)}
-              placeholder={`Step ${index + 1}`}
-              fullWidth
+            <FormInput<PostFormSchema>
+              name={`instructions.${index}.value` as Path<PostFormSchema>}
+              control={control}
+              label={`Step ${index + 1}`}
               size="small"
+              margin="none"
               multiline
             />
             <IconButton

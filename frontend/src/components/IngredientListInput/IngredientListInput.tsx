@@ -1,9 +1,10 @@
-import { Box, Button, IconButton, Stack, TextField, Typography } from "@mui/material";
+import { Box, Button, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { useFieldArray } from "react-hook-form";
-import type { Control } from "react-hook-form";
+import type { Control, Path } from "react-hook-form";
 import type { PostFormSchema } from "../PostForm/PostForm";
+import { FormInput } from "../FormInput/FormInput";
 
 interface IngredientListInputProps {
   control: Control<PostFormSchema>;
@@ -19,12 +20,13 @@ export default function IngredientListInput({ control }: IngredientListInputProp
     <Box>
       <Stack spacing={1}>
         {fields.map((field, index) => (
-          <Stack key={field.id} direction="row" spacing={1} alignItems="center">
-            <TextField
-              {...control.register(`ingredients.${index}.value`)}
-              placeholder={`Ingredient ${index + 1}`}
-              fullWidth
+          <Stack key={field.id} direction="row" spacing={1} alignItems="flex-start">
+            <FormInput<PostFormSchema>
+              name={`ingredients.${index}.value` as Path<PostFormSchema>}
+              control={control}
+              label={`Ingredient ${index + 1}`}
               size="small"
+              margin="none"
             />
             <IconButton
               onClick={() => remove(index)}

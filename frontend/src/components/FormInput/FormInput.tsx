@@ -13,6 +13,8 @@ interface FormInputProps<T extends FieldValues> {
   rows?: number;
   minRows?: number;
   textareaStyle?: React.CSSProperties;
+  size?: "small" | "medium";
+  margin?: "none" | "dense" | "normal";
 }
 
 export const FormInput = <T extends FieldValues>({
@@ -25,6 +27,8 @@ export const FormInput = <T extends FieldValues>({
   rows,
   minRows,
   textareaStyle,
+  size,
+  margin = "normal",
 }: FormInputProps<T>) => {
   return (
     <Controller
@@ -36,7 +40,8 @@ export const FormInput = <T extends FieldValues>({
           placeholder={label}
           type={type}
           fullWidth
-          margin="normal"
+          size={size}
+          margin={margin}
           multiline={multiline}
           rows={rows}
           minRows={minRows}
@@ -45,6 +50,8 @@ export const FormInput = <T extends FieldValues>({
           onChange={(e) => {
             if (type === "file") {
               field.onChange((e.target as HTMLInputElement).files);
+            } else if (type === "number") {
+              field.onChange(parseFloat(e.target.value));
             } else {
               field.onChange(e.target.value);
             }

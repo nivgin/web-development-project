@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Autocomplete, Box, Stack, TextField, Typography } from "@mui/material";
+import { Autocomplete, Box, Button, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
-import { Controller } from "react-hook-form";
+import { Controller, useFormState } from "react-hook-form";
 import type { Control, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { FormInput } from "../FormInput/FormInput";
@@ -11,13 +11,14 @@ import IngredientListInput from "../IngredientListInput/IngredientListInput";
 import InstructionListInput from "../InstructionListInput/InstructionListInput";
 
 export const postFormSchema = z.object({
-  title: z.string(),
-  content: z.string(),
-  category: z.string(),
-  time: z.number(),
-  servings: z.number(),
-  ingredients: z.array(z.object({ value: z.string() })),
-  instructions: z.array(z.object({ value: z.string() })),
+  title: z.string().min(1),
+  content: z.string().min(1),
+  category: z.string().min(1),
+  time: z.number().min(1),
+  servings: z.number().min(1),
+  image: z.instanceof(FileList).refine((f) => f.length > 0),
+  ingredients: z.array(z.object({ value: z.string().min(1) })).min(1),
+  instructions: z.array(z.object({ value: z.string().min(1) })).min(1),
 });
 
 export type PostFormSchema = z.infer<typeof postFormSchema>;
@@ -26,10 +27,12 @@ interface PostFormProps {
   control: Control<PostFormSchema>;
   handleSubmit: (cb: SubmitHandler<PostFormSchema>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
   onSubmit: SubmitHandler<PostFormSchema>;
+  isSubmitting?: boolean;
 }
 
-export default function PostForm({ control, handleSubmit, onSubmit }: PostFormProps) {
+export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting }: PostFormProps) {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const { errors } = useFormState({ control });
   const api = useAPI();
 
   const { data: categories = [] } = useQuery({
@@ -46,10 +49,12 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
           accept="image/*"
           id="post-image-upload"
           style={{ display: "none" }}
-          onChange={(e) => {
-            const file = e.target.files?.[0];
-            if (file) setImagePreview(URL.createObjectURL(file));
-          }}
+          {...control.register("image", {
+            onChange: (e) => {
+              const file = e.target.files?.[0];
+              if (file) setImagePreview(URL.createObjectURL(file));
+            },
+          })}
         />
         <label htmlFor="post-image-upload">
           <Box
@@ -58,7 +63,7 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
               height: 220,
               borderRadius: 3,
               border: "2px dashed",
-              borderColor: "divider",
+              borderColor: errors.image ? "error.main" : "divider",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
@@ -78,8 +83,7 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
             )}
           </Box>
         </label>
-
-        {/* Title */}
+        {errors.image && <FormHelperText error>Recipe image is required</FormHelperText>}
         <Typography variant="subtitle1">Title</Typography>
         <FormInput<PostFormSchema> name="title" control={control} label="Recipe Title" />
 
@@ -92,13 +96,13 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
         <Controller
           name="category"
           control={control}
-          render={({ field }) => (
+          render={({ field, fieldState }) => (
             <Autocomplete
               options={categories}
               value={field.value ?? null}
               onChange={(_, value) => field.onChange(value ?? "")}
               renderInput={(params) => (
-                <TextField {...params} placeholder="Select a category" />
+                <TextField {...params} placeholder="Select a category" error={!!fieldState.error} helperText={fieldState.error?.message} />
               )}
             />
           )}
@@ -123,6 +127,16 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
         {/* Instructions */}
         <Typography variant="subtitle1" mb={1}>Instructions</Typography>
         <InstructionListInput control={control} />
+
+        <Button
+          type="submit"
+          variant="contained"
+          size="large"
+          disabled={isSubmitting}
+          sx={{ mt: 2, alignSelf: "flex-start", color: "white", boxShadow: 0 }}
+        >
+          {isSubmitting ? "Publishing..." : "Publish Recipe"}
+        </Button>
       </Stack>
     </form>
   );
