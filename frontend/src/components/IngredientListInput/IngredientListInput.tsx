@@ -5,6 +5,7 @@ import { useFieldArray } from "react-hook-form";
 import type { Control, Path } from "react-hook-form";
 import type { PostFormSchema } from "../PostForm/PostForm";
 import { FormInput } from "../FormInput/FormInput";
+import * as styles from "./styles";
 
 interface IngredientListInputProps {
   control: Control<PostFormSchema>;
@@ -43,7 +44,7 @@ export default function IngredientListInput({ control }: IngredientListInputProp
         startIcon={<AddIcon />}
         onClick={() => append({ value: "" })}
         size="small"
-        sx={{ mt: 1 }}
+        sx={styles.addButton}
       >
         Add Ingredient
       </Button>

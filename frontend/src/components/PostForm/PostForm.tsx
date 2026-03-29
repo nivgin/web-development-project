@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAPI } from "../../hooks/useApi";
 import IngredientListInput from "../IngredientListInput/IngredientListInput";
 import InstructionListInput from "../InstructionListInput/InstructionListInput";
+import * as styles from "./styles";
 
 export const postFormSchema = z.object({
   title: z.string().min(1),
@@ -57,24 +58,7 @@ export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting
           })}
         />
         <label htmlFor="post-image-upload">
-          <Box
-            sx={{
-              width: "100%",
-              height: 220,
-              borderRadius: 3,
-              border: "2px dashed",
-              borderColor: errors.image ? "error.main" : "divider",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              overflow: "hidden",
-              cursor: "pointer",
-              backgroundColor: "background.paper",
-              backgroundImage: imagePreview ? `url(${imagePreview})` : "none",
-              backgroundSize: "cover",
-              backgroundPosition: "center",
-            }}
-          >
+          <Box sx={styles.imageUploadBox(!!errors.image, imagePreview)}>
             {!imagePreview && (
               <Stack alignItems="center" spacing={1} color="text.secondary">
                 <ImageIcon fontSize="large" />
@@ -133,7 +117,7 @@ export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting
           variant="contained"
           size="large"
           disabled={isSubmitting}
-          sx={{ mt: 2, alignSelf: "flex-start", color: "white", boxShadow: 0 }}
+          sx={styles.submitButton}
         >
           {isSubmitting ? "Publishing..." : "Publish Recipe"}
         </Button>

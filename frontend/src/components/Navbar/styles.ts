@@ -55,3 +55,11 @@ export const logoutButtonStyle = {
     color: "red",
   },
 };
+
+export const newRecipeButtonStyle = {
+  color: "white",
+  boxShadow: 0,
+  borderRadius: "12px",
+  fontWeight: 600,
+  gap: "6px",
+};

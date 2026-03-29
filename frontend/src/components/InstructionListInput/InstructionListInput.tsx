@@ -5,6 +5,7 @@ import { useFieldArray } from "react-hook-form";
 import type { Control, Path } from "react-hook-form";
 import type { PostFormSchema } from "../PostForm/PostForm";
 import { FormInput } from "../FormInput/FormInput";
+import * as styles from "./styles";
 
 interface InstructionListInputProps {
   control: Control<PostFormSchema>;
@@ -24,7 +25,7 @@ export default function InstructionListInput({ control }: InstructionListInputPr
             <Typography
               variant="body2"
               fontWeight={600}
-              sx={{ minWidth: 24, color: "text.secondary", pt: "9px" }}
+              sx={styles.stepNumber}
             >
               {index + 1}.
             </Typography>
@@ -51,7 +52,7 @@ export default function InstructionListInput({ control }: InstructionListInputPr
         startIcon={<AddIcon />}
         onClick={() => append({ value: "" })}
         size="small"
-        sx={{ mt: 1 }}
+        sx={styles.addButton}
       >
         Add Step
       </Button>
