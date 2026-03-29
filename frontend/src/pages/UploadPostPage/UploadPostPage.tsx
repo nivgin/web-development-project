@@ -4,7 +4,9 @@ import PostForm from "../../components/PostForm/PostForm";
 import type { PostFormSchema } from "../../components/PostForm/PostForm";
 
 export default function UploadPostPage() {
-  const { control, handleSubmit } = useForm<PostFormSchema>();
+  const { control, handleSubmit } = useForm<PostFormSchema>({
+    defaultValues: { ingredients: [{ value: "" }], instructions: [{ value: "" }] },
+  });
 
   const onSubmit = (data: PostFormSchema) => {
     console.log(data);

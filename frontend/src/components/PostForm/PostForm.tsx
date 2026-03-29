@@ -7,6 +7,8 @@ import { z } from "zod";
 import { FormInput } from "../FormInput/FormInput";
 import { useQuery } from "@tanstack/react-query";
 import { useAPI } from "../../hooks/useApi";
+import IngredientListInput from "../IngredientListInput/IngredientListInput";
+import InstructionListInput from "../InstructionListInput/InstructionListInput";
 
 export const postFormSchema = z.object({
   title: z.string(),
@@ -14,6 +16,8 @@ export const postFormSchema = z.object({
   category: z.string(),
   time: z.number(),
   servings: z.number(),
+  ingredients: z.array(z.object({ value: z.string() })),
+  instructions: z.array(z.object({ value: z.string() })),
 });
 
 export type PostFormSchema = z.infer<typeof postFormSchema>;
@@ -111,6 +115,14 @@ export default function PostForm({ control, handleSubmit, onSubmit }: PostFormPr
             <FormInput<PostFormSchema> name="servings" control={control} label="Servings" type="number" />
           </Box>
         </Stack>
+
+        {/* Ingredients */}
+        <Typography variant="subtitle1" mb={1}>Ingredients</Typography>
+        <IngredientListInput control={control} />
+
+        {/* Instructions */}
+        <Typography variant="subtitle1" mb={1}>Instructions</Typography>
+        <InstructionListInput control={control} />
       </Stack>
     </form>
   );
