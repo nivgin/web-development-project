@@ -43,7 +43,7 @@ export default function ViewPostPage() {
       {post && <RecipeTitle post={post} sender={sender} />}
 
       {/* Body section */}
-      <Box sx={{ maxWidth: "90em", mx: "auto", px: 2, py: 6 }}>
+      <Box sx={{ maxWidth: "lg", mx: "auto", px: 2, py: 6 }}>
         <IngredientList ingredients={post?.ingredients ?? []} />
         <InstructionList instructions={post?.instructions ?? []} />
         {id && <CommentList postId={id} />}

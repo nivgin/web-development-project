@@ -9,6 +9,12 @@ interface FormInputProps<T extends FieldValues> {
   type?: string;
   accept?: string;
   icon?: React.ReactNode;
+  multiline?: boolean;
+  rows?: number;
+  minRows?: number;
+  textareaStyle?: React.CSSProperties;
+  size?: "small" | "medium";
+  margin?: "none" | "dense" | "normal";
 }
 
 export const FormInput = <T extends FieldValues>({
@@ -17,6 +23,12 @@ export const FormInput = <T extends FieldValues>({
   label,
   type = "text",
   icon,
+  multiline,
+  rows,
+  minRows,
+  textareaStyle,
+  size,
+  margin = "normal",
 }: FormInputProps<T>) => {
   return (
     <Controller
@@ -28,12 +40,18 @@ export const FormInput = <T extends FieldValues>({
           placeholder={label}
           type={type}
           fullWidth
-          margin="normal"
+          size={size}
+          margin={margin}
+          multiline={multiline}
+          rows={rows}
+          minRows={minRows}
           error={!!error}
           helperText={error?.message}
           onChange={(e) => {
             if (type === "file") {
               field.onChange((e.target as HTMLInputElement).files);
+            } else if (type === "number") {
+              field.onChange(parseFloat(e.target.value));
             } else {
               field.onChange(e.target.value);
             }
@@ -44,6 +62,7 @@ export const FormInput = <T extends FieldValues>({
                 <InputAdornment position="start">{icon}</InputAdornment>
               ) : undefined,
             },
+            htmlInput: textareaStyle ? { style: textareaStyle } : undefined,
           }}
         />
       )}

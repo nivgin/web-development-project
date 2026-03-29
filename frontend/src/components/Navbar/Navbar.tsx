@@ -1,7 +1,7 @@
 import { Box, Typography, Button, IconButton } from "@mui/material";
-import { Link, useLocation } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import logo from "/chef.png";
-import { Home, User, ChefHat, LogOut } from "lucide-react";
+import { Home, User, ChefHat, LogOut, Plus } from "lucide-react";
 import { useTheme } from "@mui/material/styles";
 import {
   navbarContainerStyle,
@@ -9,12 +9,14 @@ import {
   linksContainerStyle,
   navButtonStyle,
   logoutButtonStyle,
+  newRecipeButtonStyle,
 } from "./styles";
 import { useAuth } from "../../hooks/useAuth";
 
 export const NavBar = () => {
     const { logout } = useAuth();
     const theme = useTheme();
+    const navigate = useNavigate();
   const { pathname } = useLocation();
 
   const navigationMap = {
@@ -80,9 +82,15 @@ export const NavBar = () => {
 
 
       </Box>
+      <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+        <Button variant="contained" size="medium" sx={newRecipeButtonStyle} onClick={() => navigate("/upload")}>
+          <Plus size={18} />
+          New Recipe
+        </Button>
         <IconButton onClick={handleLogout} sx={logoutButtonStyle}>
-        <LogOut size={26} />
+          <LogOut size={26} />
         </IconButton>
+      </Box>
     </Box>
   );
 };

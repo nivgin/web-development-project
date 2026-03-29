@@ -9,7 +9,7 @@ export const container: SxProps = {
 };
 
 export const inner: SxProps = {
-  maxWidth: "90em",
+  maxWidth: "lg",
   mx: "auto",
   display: "flex",
   flexDirection: { xs: "column", md: "row" },
