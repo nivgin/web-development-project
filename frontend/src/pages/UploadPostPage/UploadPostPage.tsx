@@ -33,7 +33,7 @@ export default function UploadPostPage() {
       instructions: data.instructions.map((i) => i.value),
       image: data.image[0],
     });
-    navigate("/");
+    navigate("/profile");
   };
 
   return (

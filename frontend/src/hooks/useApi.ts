@@ -49,6 +49,13 @@ export const useAPI = () => {
       getPostById: async (id: string) =>
         (await api.get<PostFull>(`/post/${id}`)).data,
 
+      getPostsBySender: async (sender: string, search?: string, page?: number, limit?: number) =>
+        (
+          await api.get<Post[]>("/post", {
+            params: { sender, search, page, limit },
+          })
+        ).data,
+        
       createPost: async ({ image, ...rest }: CreatePostData) => {
         const imageUrl = await uploadFile(image);
         return (await api.post<Post>("/post", { ...rest, imageUrl })).data;
