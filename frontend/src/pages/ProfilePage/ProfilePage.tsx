@@ -1,4 +1,4 @@
-import { Box, CircularProgress } from "@mui/material";
+import { Box, CircularProgress, Divider, Typography } from "@mui/material";
 import { useQuery, useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { useAPI } from "../../hooks/useApi";
 import { useAuth } from "../../hooks/useAuth";
@@ -9,7 +9,7 @@ import FeedEnd from "../../components/FeedEnd/FeedEnd";
 import type { Post } from "../../types/Post";
 
 export default function ProfilePage() {
-  const LIMIT = 6;
+  const LIMIT = 12;
   const api = useAPI();
   const { user: userId } = useAuth();
 
@@ -45,6 +45,10 @@ export default function ProfilePage() {
   return (
     <Box sx={{ maxWidth: "lg", mt: "80px", mx: "auto" }}>
       {user && <UserInfo user={user} />}
+      <Divider />
+      <Typography variant="h5" sx={{ fontWeight: 700, px: 3, pt: 3, pb: 1 }}>
+        My Recipes
+      </Typography>
       <InfiniteScroll
         dataLength={posts.length}
         next={fetchNextPage}

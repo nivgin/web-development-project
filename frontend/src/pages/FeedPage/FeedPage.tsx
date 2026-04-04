@@ -10,7 +10,7 @@ import FeedEnd from "../../components/FeedEnd/FeedEnd";
 import type { Post } from "../../types/Post";
 
 export default function FeedPage() {
-  const LIMIT = 6;
+  const LIMIT = 12;
   const api = useAPI();
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebounce(search, 400);
