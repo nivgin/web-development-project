@@ -8,7 +8,7 @@ import { card, title, description, metaRow, metaItem, cardMedia, divider, cardCo
 import type { Post } from "../../types/Post";
 import { useAPI } from "../../hooks/useApi";
 
-const PostCard = ({ _id: id, title: postTitle, content: postDesc, likeCount: likes, isLiked, imageUrl, commentCount: comments }: Post) => {
+const PostCard = ({ _id: id, title: postTitle, content: postDesc, likeCount: likes, isLiked, imageUrl, commentCount: comments, linkSuffix }: Post & { linkSuffix?: string }) => {
   const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
   const [countOverride, setCountOverride] = useState<number | null>(null);
 
@@ -37,7 +37,7 @@ const PostCard = ({ _id: id, title: postTitle, content: postDesc, likeCount: lik
   };
 
   return (
-    <Link to={`/post/${id}`} style={{ textDecoration: "none" }}>
+    <Link to={`/post/${id}${linkSuffix ?? ""}`} style={{ textDecoration: "none" }}>
       <Card sx={card}>
         <CardMedia component="img" sx={cardMedia} image={imageUrl} alt={postTitle} />
         <CardContent sx={cardContent}>
