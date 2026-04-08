@@ -9,6 +9,7 @@ import { useAuth } from "./hooks/useAuth";
 import FeedPage from "./pages/FeedPage/FeedPage";
 import AskTheChefPage from "./pages/AskTheChefPage/AskTheChefPage";
 import ViewPostPage from "./pages/ViewPostPage/ViewPostPage";
+import ManagePostPage from "./pages/ManagePostPage/ManagePostPage";
 import UploadPostPage from "./pages/UploadPostPage/UploadPostPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 
@@ -39,6 +40,7 @@ function AppContent() {
         <Route path="/" element={<ProtectedRoute><FeedPage></FeedPage></ProtectedRoute>}/>
         <Route path="/search" element={<ProtectedRoute><AskTheChefPage></AskTheChefPage></ProtectedRoute>}/>
         <Route path="/post/:id" element={<ProtectedRoute><ViewPostPage /></ProtectedRoute>}/>
+        <Route path="/post/:id/manage" element={<ProtectedRoute><ManagePostPage /></ProtectedRoute>}/>
         <Route path="/upload" element={<ProtectedRoute><UploadPostPage /></ProtectedRoute>}/>
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
       </Routes>

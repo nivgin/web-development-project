@@ -1,10 +1,17 @@
-import { Avatar, Box, Divider, Typography } from "@mui/material";
+import { Box, Button, Divider } from "@mui/material";
 import type { PostFull } from "../../types/Post";
-import type { User } from "../../types/User";
 import RecipeTitleDetails from "../RecipeTitleDetails/RecipeTitleDetails";
 import * as styles from "./styles";
 
-export default function RecipeTitle({ post, sender }: { post: PostFull; sender?: User }) {
+export default function ManageRecipeTitle({
+  post,
+  onEdit,
+  onDelete,
+}: {
+  post: PostFull;
+  onEdit?: () => void;
+  onDelete?: () => void;
+}) {
   return (
     <Box sx={styles.container}>
       <Box sx={styles.inner}>
@@ -15,11 +22,13 @@ export default function RecipeTitle({ post, sender }: { post: PostFull; sender?:
           sx={styles.image}
         />
         <Box sx={styles.textSide}>
-          <Box sx={styles.authorRow}>
-            <Avatar src={sender?.pfpUrl} alt={sender?.username ?? "Anonymous"} sx={styles.avatar} />
-            <Typography variant="body2" fontWeight="bold" color="text.secondary">
-              {sender?.username ?? "Anonymous"}
-            </Typography>
+          <Box sx={styles.actionRow}>
+            <Button variant="contained" onClick={onEdit} disableElevation sx={styles.editButton}>
+              Edit
+            </Button>
+            <Button variant="contained" onClick={onDelete} disableElevation sx={styles.deleteButton}>
+              Delete
+            </Button>
           </Box>
           <Divider sx={styles.authorDivider} />
           <RecipeTitleDetails post={post} />
@@ -28,4 +37,3 @@ export default function RecipeTitle({ post, sender }: { post: PostFull; sender?:
     </Box>
   );
 }
-
