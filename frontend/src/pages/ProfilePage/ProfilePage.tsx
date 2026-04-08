@@ -60,7 +60,7 @@ export default function ProfilePage() {
         }
         endMessage={<FeedEnd />}
       >
-        <PostsGrid posts={posts} />
+        <PostsGrid posts={posts} linkSuffix="/manage" />
       </InfiniteScroll>
     </Box>
   );
