@@ -47,6 +47,7 @@ export default function UploadPostPage() {
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}
           isSubmitting={isPending}
+          imageRequired
         />
       </Container>
     </Box>

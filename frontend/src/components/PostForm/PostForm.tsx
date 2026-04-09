@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Autocomplete, Box, Button, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
-import { Controller, useFormState } from "react-hook-form";
+import { Controller } from "react-hook-form";
 import type { Control, SubmitHandler } from "react-hook-form";
 import { z } from "zod";
 import { FormInput } from "../FormInput/FormInput";
@@ -17,7 +17,7 @@ export const postFormSchema = z.object({
   category: z.string().min(1),
   time: z.number().min(1),
   servings: z.number().min(1),
-  image: z.instanceof(FileList).refine((f) => f.length > 0),
+  image: z.instanceof(FileList).optional(),
   ingredients: z.array(z.object({ value: z.string().min(1) })).min(1),
   instructions: z.array(z.object({ value: z.string().min(1) })).min(1),
 });
@@ -29,11 +29,12 @@ interface PostFormProps {
   handleSubmit: (cb: SubmitHandler<PostFormSchema>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
   onSubmit: SubmitHandler<PostFormSchema>;
   isSubmitting?: boolean;
+  initialImagePreview?: string;
+  imageRequired?: boolean;
 }
 
-export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting }: PostFormProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const { errors } = useFormState({ control });
+export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting, initialImagePreview, imageRequired }: PostFormProps) {
+  const [imagePreview, setImagePreview] = useState<string | null>(initialImagePreview ?? null);
   const api = useAPI();
 
   const { data: categories = [] } = useQuery({
@@ -58,7 +59,7 @@ export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting
           })}
         />
         <label htmlFor="post-image-upload">
-          <Box sx={styles.imageUploadBox(!!errors.image, imagePreview)}>
+          <Box sx={styles.imageUploadBox(!!imageRequired && !imagePreview, imagePreview)}>
             {!imagePreview && (
               <Stack alignItems="center" spacing={1} color="text.secondary">
                 <ImageIcon fontSize="large" />
@@ -67,7 +68,7 @@ export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting
             )}
           </Box>
         </label>
-        {errors.image && <FormHelperText error>Recipe image is required</FormHelperText>}
+        {imageRequired && !imagePreview && <FormHelperText error>Recipe image is required</FormHelperText>}
         <Typography variant="subtitle1">Title</Typography>
         <FormInput<PostFormSchema> name="title" control={control} label="Recipe Title" />
 

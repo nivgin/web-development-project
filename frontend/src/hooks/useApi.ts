@@ -1,7 +1,7 @@
 import api from "./api-client";
 import type { User } from "../types/User";
 import type { LoginData, RegisterData, LoginResponse } from "../types/Auth";
-import type { Post, PostFull, CreatePostData } from "../types/Post";
+import type { Post, PostFull, CreatePostData, UpdatePostData } from "../types/Post";
 import { uploadFile } from "../utils/uploadFile";
 import type { Comment } from "../types/Comment";
 
@@ -59,6 +59,11 @@ export const useAPI = () => {
       createPost: async ({ image, ...rest }: CreatePostData) => {
         const imageUrl = await uploadFile(image);
         return (await api.post<Post>("/post", { ...rest, imageUrl })).data;
+      },
+
+      updatePost: async (id: string, { image, existingImageUrl, ...rest }: UpdatePostData) => {
+        const imageUrl = image ? await uploadFile(image) : existingImageUrl;
+        return (await api.put<Post>(`/post/${id}`, { ...rest, imageUrl })).data;
       },
 
       likePost: async (id: string) =>
