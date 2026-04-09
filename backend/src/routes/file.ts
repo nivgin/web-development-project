@@ -60,7 +60,7 @@ fileRouter.post("/", upload.single("file"), (req, res) => {
     return res.status(400).send({ error: "No file uploaded" });
   }
 
-  const url = base + req.file.path;
+  const url = base + req.file.path.replace(/\\/g, "/");
 
   res.status(200).send({ url });
 });

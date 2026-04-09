@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -30,6 +30,8 @@ export default function EditPostPage() {
     defaultValues: { ingredients: [{ value: "" }], instructions: [{ value: "" }] },
   });
 
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
+
   // We could make the API call to fetch the post directly here,
   // but then we would be losing out on caching logic from useQuery.
   useEffect(() => {
@@ -43,6 +45,7 @@ export default function EditPostPage() {
       ingredients: post.ingredients.map((v) => ({ value: v })),
       instructions: post.instructions.map((v) => ({ value: v })),
     });
+    setImagePreview(post.imageUrl);
   }, [post]);
 
   const { mutateAsync: updatePost, isPending } = useMutation({
@@ -88,7 +91,8 @@ export default function EditPostPage() {
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}
           isSubmitting={isPending}
-          initialImagePreview={post?.imageUrl}
+          imagePreview={imagePreview}
+          onImagePreviewChange={setImagePreview}
         />
       </Container>
     </Box>

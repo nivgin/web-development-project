@@ -12,7 +12,7 @@ export const imageUploadBox = (hasError: boolean, imagePreview: string | null): 
   overflow: "hidden",
   cursor: "pointer",
   backgroundColor: "background.paper",
-  backgroundImage: imagePreview ? `url(${imagePreview})` : "none",
+  backgroundImage: imagePreview ? `url("${imagePreview}")` : "none",
   backgroundSize: "cover",
   backgroundPosition: "center",
 });

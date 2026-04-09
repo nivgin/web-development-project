@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { Autocomplete, Box, Button, FormHelperText, Stack, TextField, Typography } from "@mui/material";
 import ImageIcon from "@mui/icons-material/Image";
 import { Controller } from "react-hook-form";
@@ -29,12 +28,12 @@ interface PostFormProps {
   handleSubmit: (cb: SubmitHandler<PostFormSchema>) => (e?: React.BaseSyntheticEvent) => Promise<void>;
   onSubmit: SubmitHandler<PostFormSchema>;
   isSubmitting?: boolean;
-  initialImagePreview?: string;
+  imagePreview: string | null;
+  onImagePreviewChange: (url: string | null) => void;
   imageRequired?: boolean;
 }
 
-export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting, initialImagePreview, imageRequired }: PostFormProps) {
-  const [imagePreview, setImagePreview] = useState<string | null>(initialImagePreview ?? null);
+export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting, imagePreview, onImagePreviewChange, imageRequired }: PostFormProps) {
   const api = useAPI();
 
   const { data: categories = [] } = useQuery({
@@ -54,7 +53,7 @@ export default function PostForm({ control, handleSubmit, onSubmit, isSubmitting
           {...control.register("image", {
             onChange: (e) => {
               const file = e.target.files?.[0];
-              if (file) setImagePreview(URL.createObjectURL(file));
+              if (file) onImagePreviewChange(URL.createObjectURL(file));
             },
           })}
         />
