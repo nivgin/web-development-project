@@ -4,9 +4,16 @@ export const root: SxProps<Theme> = {
   display: "flex",
   flexDirection: "row",
   alignItems: "center",
-  gap: 3,
+  justifyContent: "space-between",
   py: 4,
   px: 3,
+};
+
+export const userDetails: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "row",
+  alignItems: "center",
+  gap: 3,
 };
 
 export const textGroup: SxProps<Theme> = {
@@ -27,4 +34,10 @@ export const name: SxProps<Theme> = {
 
 export const email: SxProps<Theme> = {
   color: "text.secondary",
+};
+
+export const editButton: SxProps<Theme> = {
+  backgroundColor: "grey.500",
+  color: "white",
+  "&:hover": { backgroundColor: "grey.600" },
 };
