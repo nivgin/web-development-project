@@ -7,6 +7,7 @@ import IngredientList from "../../components/IngredientList/IngredientList";
 import ManageRecipeTitle from "../../components/ManageRecipeTitle/ManageRecipeTitle";
 import CommentList from "../../components/CommentList/CommentList";
 import PublishComment from "../../components/PublishComment/PublishComment";
+import AuthRestrictedRoute from "../../routes/AuthRestrictedRoute";
 
 export default function ManagePostPage() {
   const { id } = useParams<{ id: string }>();
@@ -33,16 +34,18 @@ export default function ManagePostPage() {
   }
 
   return (
-    <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
-      {post && <ManageRecipeTitle post={post} />}
+    <AuthRestrictedRoute ownerId={post?.sender}>
+      <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
+        {post && <ManageRecipeTitle post={post} />}
 
-      {/* Body section */}
-      <Box sx={{ maxWidth: "lg", mx: "auto", px: 2, py: 6 }}>
-        <IngredientList ingredients={post?.ingredients ?? []} />
-        <InstructionList instructions={post?.instructions ?? []} />
-        {id && <CommentList postId={id} />}
-        {id && <PublishComment postId={id} onPublished={handleCommentPublished} />}
+        {/* Body section */}
+        <Box sx={{ maxWidth: "lg", mx: "auto", px: 2, py: 6 }}>
+          <IngredientList ingredients={post?.ingredients ?? []} />
+          <InstructionList instructions={post?.instructions ?? []} />
+          {id && <CommentList postId={id} />}
+          {id && <PublishComment postId={id} onPublished={handleCommentPublished} />}
+        </Box>
       </Box>
-    </Box>
+    </AuthRestrictedRoute>
   );
 }
