@@ -13,6 +13,7 @@ import ManagePostPage from "./pages/ManagePostPage/ManagePostPage";
 import UploadPostPage from "./pages/UploadPostPage/UploadPostPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
+import UpdateProfilePage from "./pages/UpdateProfilePage/UpdateProfilePage";
 
 export default function App() {
   return (
@@ -45,6 +46,7 @@ function AppContent() {
         <Route path="/post/:id/edit" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>}/>
         <Route path="/upload" element={<ProtectedRoute><UploadPostPage /></ProtectedRoute>}/>
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
+        <Route path="/profile/update" element={<ProtectedRoute><UpdateProfilePage /></ProtectedRoute>}/>
       </Routes>
     </>
   );

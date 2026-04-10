@@ -2,6 +2,7 @@ import api from "./api-client";
 import type { User } from "../types/User";
 import type { LoginData, RegisterData, LoginResponse } from "../types/Auth";
 import type { Post, PostFull, CreatePostData, UpdatePostData } from "../types/Post";
+import type { UpdateUserData } from "../types/User";
 import { uploadFile } from "../utils/uploadFile";
 import type { Comment } from "../types/Comment";
 
@@ -86,6 +87,13 @@ export const useAPI = () => {
     users: {
       getUserById: async (id: string) =>
         (await api.get<User>(`/user/${id}`)).data,
+
+      updateUser: async (id: string, { image, existingPfpUrl, ...rest }: UpdateUserData) => {
+        const pfpUrl = image ? await uploadFile(image) : existingPfpUrl;
+        const body = { ...rest, pfpUrl };
+        if (!body.password) delete body.password;
+        return (await api.patch<User>(`/user/${id}`, body)).data;
+      },
     },
   };
 };
