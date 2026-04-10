@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Box, CircularProgress } from "@mui/material";
 import { useAPI } from "../../hooks/useApi";
@@ -12,6 +12,7 @@ import AuthRestrictedRoute from "../../routes/AuthRestrictedRoute";
 export default function ManagePostPage() {
   const { id } = useParams<{ id: string }>();
   const api = useAPI();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
 
   const handleCommentPublished = () => {
@@ -36,7 +37,7 @@ export default function ManagePostPage() {
   return (
     <AuthRestrictedRoute ownerId={post?.sender}>
       <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
-        {post && <ManageRecipeTitle post={post} />}
+        {post && <ManageRecipeTitle post={post} onEdit={() => navigate(`/post/${id}/edit`)} />}
 
         {/* Body section */}
         <Box sx={{ maxWidth: "lg", mx: "auto", px: 2, py: 6 }}>

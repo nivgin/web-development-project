@@ -12,6 +12,7 @@ import ViewPostPage from "./pages/ViewPostPage/ViewPostPage";
 import ManagePostPage from "./pages/ManagePostPage/ManagePostPage";
 import UploadPostPage from "./pages/UploadPostPage/UploadPostPage";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import EditPostPage from "./pages/EditPostPage/EditPostPage";
 
 export default function App() {
   return (
@@ -41,6 +42,7 @@ function AppContent() {
         <Route path="/search" element={<ProtectedRoute><AskTheChefPage></AskTheChefPage></ProtectedRoute>}/>
         <Route path="/post/:id" element={<ProtectedRoute><ViewPostPage /></ProtectedRoute>}/>
         <Route path="/post/:id/manage" element={<ProtectedRoute><ManagePostPage /></ProtectedRoute>}/>
+        <Route path="/post/:id/edit" element={<ProtectedRoute><EditPostPage /></ProtectedRoute>}/>
         <Route path="/upload" element={<ProtectedRoute><UploadPostPage /></ProtectedRoute>}/>
         <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>}/>
       </Routes>

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useNavigate } from "react-router-dom";
@@ -16,6 +17,7 @@ export default function UploadPostPage() {
 
   const navigate = useNavigate();
   const api = useAPI();
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   const { mutateAsync: createPost, isPending } = useMutation({
     mutationFn: api.posts.createPost,
@@ -47,6 +49,9 @@ export default function UploadPostPage() {
           handleSubmit={handleSubmit}
           onSubmit={onSubmit}
           isSubmitting={isPending}
+          imagePreview={imagePreview}
+          onImagePreviewChange={setImagePreview}
+          imageRequired
         />
       </Container>
     </Box>

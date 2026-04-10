@@ -9,6 +9,18 @@ export type Post = {
     commentCount: number;
 }
 
+export type UpdatePostData = {
+    title: string;
+    content: string;
+    image?: File | null;
+    existingImageUrl: string;
+    ingredients: string[];
+    instructions: string[];
+    servings: number;
+    time: number;
+    category: string;
+}
+
 export type CreatePostData = {
     title: string;
     content: string;
