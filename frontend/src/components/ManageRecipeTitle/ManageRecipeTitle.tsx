@@ -1,4 +1,6 @@
 import { Box, Button, Divider } from "@mui/material";
+import SettingsIcon from "@mui/icons-material/Settings";
+import DeleteIcon from "@mui/icons-material/Delete";
 import type { PostFull } from "../../types/Post";
 import RecipeTitleDetails from "../RecipeTitleDetails/RecipeTitleDetails";
 import * as styles from "./styles";
@@ -23,10 +25,10 @@ export default function ManageRecipeTitle({
         />
         <Box sx={styles.textSide}>
           <Box sx={styles.actionRow}>
-            <Button variant="contained" onClick={onEdit} disableElevation sx={styles.editButton}>
+            <Button variant="contained" onClick={onEdit} disableElevation startIcon={<SettingsIcon />} sx={styles.editButton}>
               Edit
             </Button>
-            <Button variant="contained" onClick={onDelete} disableElevation sx={styles.deleteButton}>
+            <Button variant="contained" onClick={onDelete} disableElevation startIcon={<DeleteIcon />} sx={styles.deleteButton}>
               Delete
             </Button>
           </Box>

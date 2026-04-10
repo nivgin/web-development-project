@@ -5,3 +5,10 @@ export type User = {
     password: string;
     pfpUrl: string;
 };
+
+export type UpdateUserData = {
+    email?: string;
+    password?: string;
+    image?: File | null;
+    existingPfpUrl: string;
+};
