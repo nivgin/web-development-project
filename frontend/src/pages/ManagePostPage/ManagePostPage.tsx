@@ -20,6 +20,12 @@ export default function ManagePostPage() {
     queryClient.invalidateQueries({ queryKey: ["post", id] });
   };
 
+  const handleDelete = async () => {
+    if (!id) return;
+    await api.posts.deletePost(id);
+    navigate("/profile");
+  };
+
   const { data: post, isLoading: postLoading } = useQuery({
     queryKey: ["post", id],
     queryFn: () => api.posts.getPostById(id!),
@@ -37,7 +43,7 @@ export default function ManagePostPage() {
   return (
     <AuthRestrictedRoute ownerId={post?.sender}>
       <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
-        {post && <ManageRecipeTitle post={post} onEdit={() => navigate(`/post/${id}/edit`)} />}
+        {post && <ManageRecipeTitle post={post} onEdit={() => navigate(`/post/${id}/edit`)} onDelete={handleDelete} />}
 
         {/* Body section */}
         <Box sx={{ maxWidth: "lg", mx: "auto", px: 2, py: 6 }}>

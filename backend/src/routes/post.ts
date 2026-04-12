@@ -5,6 +5,7 @@ import {
     getPostById,
     getPostsBySender,
     updatePost,
+    deletePost,
     likePost,
     unlikePost,
     getCategories
@@ -350,6 +351,29 @@ postRouter.put('/:id', async (req, res) => {
  *               type: string
  *               example: "Post Not Found"
  */
+
+postRouter.delete('/:id', async (req: Request, res: Response) => {
+    const id = req.params.id;
+    const sender = req.user;
+
+    if (!isValidObjectId(id)) {
+        return res.status(400).send('Invalid Post Id');
+    }
+
+    const existingPost = await getPostById(id, req.user!._id);
+
+    if (!existingPost) {
+        return res.status(404).send('Post Not Found');
+    }
+
+    if (!sender || sender._id != existingPost.sender.toString()) {
+        return res.status(400).send('Unauthorized');
+    }
+
+    await deletePost(id);
+
+    return res.sendStatus(200);
+});
 
 postRouter.post('/:id/like', async (req: Request, res: Response) => {
     const id = req.params.id;

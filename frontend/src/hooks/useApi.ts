@@ -67,6 +67,9 @@ export const useAPI = () => {
         return (await api.put<Post>(`/post/${id}`, { ...rest, imageUrl })).data;
       },
 
+      deletePost: async (id: string) =>
+        (await api.delete(`/post/${id}`)).data,
+
       likePost: async (id: string) =>
         (await api.post(`/post/${id}/like`)).data,
 

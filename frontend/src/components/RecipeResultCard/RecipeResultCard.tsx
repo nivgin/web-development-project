@@ -2,19 +2,11 @@ import { Box, Typography, ButtonBase, Tooltip } from "@mui/material";
 import AutoAwesomeIcon from "@mui/icons-material/AutoAwesome";
 import { useNavigate } from "react-router-dom";
 import { root, title, content, meta, image, description } from "./styles";
+import type { PostFull } from "../../types/Post";
 
-export interface RecipeResult {
-  _id: string;
-  title: string;
-  content: string;
-  imageUrl: string;
-  time: number;
-  servings: number;
-  category: string;
-  ingredients: string[];
-  instructions: string[];
+export type RecipeResult = PostFull & {
   aiGenerated?: boolean;
-}
+};
 
 interface RecipeResultCardProps {
   recipe: RecipeResult;
@@ -23,8 +15,16 @@ interface RecipeResultCardProps {
 export default function RecipeResultCard({ recipe }: RecipeResultCardProps) {
   const navigate = useNavigate();
 
+  const handleClick = () => {
+    if (recipe.aiGenerated) {
+      navigate("/post/custom", { state: { post: recipe } });
+    } else {
+      navigate(`/post/${recipe._id}`);
+    }
+  };
+
   return (
-    <ButtonBase sx={root} onClick={() => navigate(`/recipe/${recipe._id}`)}>
+    <ButtonBase sx={root} onClick={handleClick}>
       <Box
         component="img"
         src={recipe.imageUrl}
