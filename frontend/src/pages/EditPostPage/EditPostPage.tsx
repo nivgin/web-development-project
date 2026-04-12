@@ -82,7 +82,7 @@ export default function EditPostPage() {
   return (
     <AuthRestrictedRoute ownerId={post?.sender}>
     <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh", pt: "100px", pb: 5 }}>
-      <Container maxWidth="lg">
+      <Container maxWidth="md">
         <Typography variant="h5" fontWeight={700} mb={3} color="text.primary">
           Edit Recipe
         </Typography>

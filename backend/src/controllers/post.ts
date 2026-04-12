@@ -70,6 +70,10 @@ export const updatePost = async (id: string, postBody: IPost) => {
     return await postModel.findByIdAndUpdate(id, postBody, { new: true });
 };
 
+export const deletePost = async (id: string) => {
+    return await postModel.findByIdAndDelete(id);
+};
+
 export const likePost = async (postId: string, userId: string) => {
     return await postModel.likePost(postId, userId);
 };
