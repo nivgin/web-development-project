@@ -8,6 +8,7 @@ import { FormImageUpload } from "../FormImageUpload/FormImageUpload";
 import type { Control, SubmitHandler } from "react-hook-form";
 import type { FormSchema as AuthFormType } from "../../pages/LoginPage/LoginPage";
 import { container, card, submitButton } from "./styles";
+import GoogleSignInButton from "../GoogleSignInButton/GoogleSignInButton";
 
 interface AuthFormProps {
   isLogin: boolean;
@@ -17,9 +18,10 @@ interface AuthFormProps {
   loading: boolean;
   onSubmit: SubmitHandler<AuthFormType>;
   onToggleMode: () => void;
+  onGoogleSignIn: (idToken: string) => Promise<void>;
 }
 
-const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, onToggleMode }: AuthFormProps) => {
+const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, onToggleMode, onGoogleSignIn }: AuthFormProps) => {
   return (
     <Box sx={container}>
       <Box sx={card}>
@@ -73,6 +75,8 @@ const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, 
         </form>
 
         <Divider sx={{ my: 3, color: "text.secondary" }}>or</Divider>
+
+        <GoogleSignInButton onCredential={onGoogleSignIn} />
 
         <Typography textAlign="center">
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}

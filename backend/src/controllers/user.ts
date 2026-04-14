@@ -1,8 +1,8 @@
 import userModel from '../models/user'
 import { IUser } from '../models/user'
 
-export const createUser = async (username: string, email: string, passwordHash: string, pfpUrl: string) => {
-    return await userModel.create({ username, email, passwordHash, pfpUrl });
+export const createUser = async (username: string, email: string, passwordHash: string | undefined, pfpUrl: string, googleId?: string) => {
+    return await userModel.create({ username, email, passwordHash, pfpUrl, googleId });
 }
 
 export const getUserById = async (id: string) => {
@@ -15,6 +15,10 @@ export const getUsers = async () => {
 
 export const getUserByUsername = async (username: string) => {
     return await userModel.findOne({ username: username });
+}
+
+export const getUserByGoogleId = async (googleId: string) => {
+    return await userModel.findOne({ googleId });
 }
 
 export const updateUser = async (id: string, userBody: IUser) => {  

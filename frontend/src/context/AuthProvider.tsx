@@ -43,6 +43,19 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await api.auth.register(data);
   };
 
+  const loginWithGoogle = async (idToken: string) => {
+    const { accessToken, refreshToken } = await api.auth.googleLogin(idToken);
+
+    localStorage.setItem("accessToken", accessToken);
+    localStorage.setItem("refreshToken", refreshToken);
+
+    const payload = parseJwt(accessToken);
+    if (payload) {
+      setUser(payload._id);
+      setIsAuthenticated(true);
+    }
+  };
+
   const logout = async () => {
     const refreshToken = localStorage.getItem("refreshToken");
     if (refreshToken) {
@@ -91,6 +104,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         user,
         login,
         register,
+        loginWithGoogle,
         logout,
         loading,
         isAuthenticated,

@@ -18,7 +18,8 @@ const env = {
     ACCESS_TOKEN_SECRET: requiredEnvVar("ACCESS_TOKEN_SECRET"),
     REFRESH_TOKEN_SECRET: requiredEnvVar("REFRESH_TOKEN_SECRET"),
     OPENAI_API_KEY: requiredEnvVar("OPENAI_API_KEY"),
-    JWT_TOKEN_EXPIRATION: requiredEnvVar("JWT_TOKEN_EXPIRATION") as StringValue
+    JWT_TOKEN_EXPIRATION: requiredEnvVar("JWT_TOKEN_EXPIRATION") as StringValue,
+    GOOGLE_CLIENT_ID: requiredEnvVar("GOOGLE_CLIENT_ID"),
 }
 
 export default env;
