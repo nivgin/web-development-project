@@ -74,16 +74,16 @@ const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, 
           </Button>
         </form>
 
-        <Divider sx={{ my: 3, color: "text.secondary" }}>or</Divider>
-
-        <GoogleSignInButton onCredential={onGoogleSignIn} />
-
-        <Typography textAlign="center">
+        <Typography textAlign="center" sx={{ mt: 3 }}>
           {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
           <Link underline="hover" sx={{ cursor: "pointer" }} onClick={onToggleMode}>
             {isLogin ? "Sign Up" : "Log In"}
           </Link>
         </Typography>
+        
+        <Divider sx={{ my: 3, color: "text.secondary" }}>or</Divider>
+
+        <GoogleSignInButton onCredential={onGoogleSignIn} />
       </Box>
     </Box>
   );

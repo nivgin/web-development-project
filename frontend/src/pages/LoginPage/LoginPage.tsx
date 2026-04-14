@@ -33,7 +33,7 @@ export type { LoginForm, SignupForm };
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-  const { login, register: registerUser } = useAuth();
+  const { login, register: registerUser, loginWithGoogle } = useAuth();
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<"error" | "success" | "info" | "warning">("error");
@@ -76,6 +76,18 @@ export default function AuthPage() {
     }
   };
 
+  const handleGoogleSignIn = async (idToken: string) => {
+    try {
+      await loginWithGoogle(idToken);
+      navigate("/");
+    } catch (err) {
+      console.error("Google sign-in error:", err);
+      setAlertMessage("Google sign-in failed. Please try again.");
+      setAlertSeverity("error");
+      setAlertOpen(true);
+    }
+  };
+
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "background.default" }}>
       <AuthBranding />
@@ -87,6 +99,7 @@ export default function AuthPage() {
         loading={loading}
         onSubmit={onSubmit}
         onToggleMode={() => setIsLogin(!isLogin)}
+        onGoogleSignIn={handleGoogleSignIn}
       />
       <AppAlert
         open={alertOpen}
