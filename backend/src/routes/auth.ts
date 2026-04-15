@@ -1,9 +1,13 @@
 import express from "express";
 import bcrypt from "bcrypt";
-import { createUser, getUserByUsername, updateUser } from "../controllers/user";
+import { OAuth2Client } from "google-auth-library";
+import { createUser, getUserByUsername, getUserByGoogleId, updateUser } from "../controllers/user";
 import { MongoServerError } from "mongodb";
 import { generateToken, verifyRefreshToken, TokenType } from "../utils/jwt"
 import authenticate from "../middlewares/authenticate";
+import env from "../utils/env";
+
+const googleClient = new OAuth2Client(env.GOOGLE_CLIENT_ID);
 
 const authRouter = express.Router();
 
@@ -104,8 +108,11 @@ authRouter.post('/login', async (req, res) => {
         const user = await getUserByUsername(username);
         if (!user) return res.status(400).send('Invalid Credentials');
 
-        const hashMatch = await bcrypt.compare(password, user.passwordHash)
-        if (!hashMatch) return res.status(400).send('Invalid Credentials');
+        if (!user.passwordHash) return res.status(400).send('Invalid Credentials');
+        else {
+            const hashMatch = await bcrypt.compare(password, user.passwordHash)
+            if (!hashMatch) return res.status(400).send('Invalid Credentials');
+        }
         
         const accessToken = await generateToken({'_id': user._id}, TokenType.ACCESS)
         const refreshToken = await generateToken({'_id': user._id}, TokenType.REFRESH)
@@ -234,5 +241,48 @@ authRouter.post('/logout', authenticate, async (req, res) => {
         return res.status(400).send(error)
     }
 })
+
+authRouter.post('/google', async (req, res) => {
+    const { idToken } = req.body;
+
+    if (!idToken) {
+        return res.status(400).send('Missing ID token');
+    }
+
+    try {
+        const ticket = await googleClient.verifyIdToken({
+            idToken,
+            audience: env.GOOGLE_CLIENT_ID,
+        });
+
+        const payload = ticket.getPayload();
+        if (!payload?.sub) {
+            return res.status(400).send('Invalid Google token');
+        }
+
+        let user = await getUserByGoogleId(payload.sub);
+
+        if (!user) {
+            user = await createUser(
+                payload.name ?? payload.email ?? payload.sub,
+                payload.email!,
+                undefined,
+                payload.picture ?? '',
+                payload.sub
+            );
+        }
+
+        const accessToken = await generateToken({ '_id': user._id }, TokenType.ACCESS);
+        const refreshToken = await generateToken({ '_id': user._id }, TokenType.REFRESH);
+
+        user.tokens.push(refreshToken);
+        await updateUser(user._id.toString(), user);
+
+        return res.status(200).send({ accessToken, refreshToken });
+    } catch (err) {
+        console.error('Google auth error:', err);
+        return res.status(400).send('Google authentication failed');
+    }
+});
 
 export default authRouter;

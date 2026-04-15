@@ -15,17 +15,20 @@ import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import EditPostPage from "./pages/EditPostPage/EditPostPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage/UpdateProfilePage";
 import ViewCustomPostPage from "./pages/ViewCustomPostPage/ViewCustomPostPage";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 export default function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <BrowserRouter>
-        <AuthProvider>
-          <AppContent />
-        </AuthProvider>
-      </BrowserRouter>
-    </ThemeProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID}>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <AuthProvider>
+            <AppContent />
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
+    </GoogleOAuthProvider>
   );
 }
 

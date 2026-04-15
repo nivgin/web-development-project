@@ -3,7 +3,8 @@ import mongoose from 'mongoose';
 interface IUser {
     username: string,
     email: string,
-    passwordHash: string,
+    passwordHash?: string,
+    googleId?: string,
     tokens: string[],
     pfpUrl: string
 }
@@ -21,7 +22,12 @@ const userSchema = new mongoose.Schema<IUser>({
     },
     passwordHash: {
         type: String,
-        required: true
+        required: false
+    },
+    googleId: {
+        type: String,
+        unique: true,
+        sparse: true
     },
     tokens: {
         type: [String],

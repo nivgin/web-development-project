@@ -33,6 +33,9 @@ export const useAPI = () => {
         return api.post("/auth/logout", { refreshToken });
       },
 
+      googleLogin: async (idToken: string) =>
+        (await api.post<{ accessToken: string; refreshToken: string }>("/auth/google", { idToken })).data,
+
       getUserByUsername: async (username: string) =>
         (await api.get<User>(`/user/${username}`)).data,
     },
