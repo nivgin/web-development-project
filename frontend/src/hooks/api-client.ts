@@ -6,8 +6,10 @@ let api: AxiosInstance | null = null;
 export const getApi = (): AxiosInstance => {
   if (api) return api;
 
+  const backendURL: string = import.meta.env.VITE_BACKEND_URL || 'http://localhost:4000/';
+
   api = axios.create({
-    baseURL: 'http://localhost:4000/',
+    baseURL: backendURL,
     headers: {
       'Content-Type': 'application/json',
     },
@@ -30,7 +32,7 @@ export const getApi = (): AxiosInstance => {
         try {
           const refreshToken = localStorage.getItem('refreshToken');
           const response = await axios.post(
-            'http://localhost:4000/auth/refreshToken',
+            backendURL + 'auth/refreshToken',
             {},
             {
               headers: {
