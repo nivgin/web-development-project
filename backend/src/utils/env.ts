@@ -12,7 +12,8 @@ const requiredEnvVar = (varname: string) => {
 }
 
 const env = {
-    PORT: process.env.PORT || 4000,
+    PORT: process.env.PORT || 80,
+    HTTPS_PORT: process.env.HTTPS_PORT || 443,
     BASE_DOMAIN: "http://localhost",
     DATABASE_URI: process.env.DATABASE_URI || 'mongodb://localhost:27017',
     ACCESS_TOKEN_SECRET: requiredEnvVar("ACCESS_TOKEN_SECRET"),
@@ -20,6 +21,7 @@ const env = {
     OPENAI_API_KEY: requiredEnvVar("OPENAI_API_KEY"),
     JWT_TOKEN_EXPIRATION: requiredEnvVar("JWT_TOKEN_EXPIRATION") as StringValue,
     GOOGLE_CLIENT_ID: requiredEnvVar("GOOGLE_CLIENT_ID"),
+    NODE_ENV: process.env.NODE_ENV || 'dev'
 }
 
 export default env;

@@ -44,6 +44,7 @@ export const createApp = async (appMmode?: Mode) => {
         res.header('Access-Control-Allow-Methods', '*');
         next();
     });
+    app.use('/', express.static('public'));
     app.use('/public', express.static('public'));
     app.use('/auth', authRouter)
     app.use('/post', authenticate, postRouter);
