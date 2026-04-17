@@ -19,8 +19,8 @@ beforeAll(async () => {
     app = await createApp(Mode.TEST);
     request = supertest(app);
     
-    await request.post("/auth/register").send(testUser);
-    const loggedInUser = await request.post("/auth/login").send(testUser);
+    await request.post("/api/auth/register").send(testUser);
+    const loggedInUser = await request.post("/api/auth/login").send(testUser);
     accessToken = loggedInUser.body.accessToken;
 });
 
@@ -35,7 +35,7 @@ afterAll(async () => {
 describe("File Tests", () => { 
     it("upload file", async () => { 
         const filePath = path.join(__dirname, "test.jpg"); 
-        const response = await request.post("/file")
+        const response = await request.post("/api/file")
         .set({authorization: `JWT ${accessToken}`})
         .attach("file", filePath)
         .expect(200);
@@ -46,7 +46,7 @@ describe("File Tests", () => {
     });
 
     it("fails when no file uploaded", async () => {
-        const response = await request.post("/file")
+        const response = await request.post("/api/file")
             .set({ authorization: `JWT ${accessToken}` })
             .expect(400);
 

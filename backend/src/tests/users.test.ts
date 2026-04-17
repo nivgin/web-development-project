@@ -32,9 +32,9 @@ beforeAll(async () => {
     request = supertest(app);
     
     // Create test user
-    const registerUser = await request.post("/auth/register").send(testUser);
+    const registerUser = await request.post("/api/auth/register").send(testUser);
     userId = registerUser.body._id.toString();
-    const loggedInUser = await request.post("/auth/login").send(testUser);
+    const loggedInUser = await request.post("/api/auth/login").send(testUser);
     accessToken = loggedInUser.body.accessToken;
 });
 
@@ -66,9 +66,9 @@ const createAuthenticatedUser = async () => {
         password: "testpassword123",
         pfpUrl: `image_${userCounter}.png`
     };
-    const registerUser = await request.post("/auth/register").send(newUser);
+    const registerUser = await request.post("/api/auth/register").send(newUser);
     const userId = registerUser.body._id.toString();
-    const loggedInUser = await request.post("/auth/login").send(newUser);
+    const loggedInUser = await request.post("/api/auth/login").send(newUser);
     const accessToken = loggedInUser.body.accessToken;
     return { userId, accessToken };
 };
@@ -83,7 +83,7 @@ describe("User Routes", () => {
         
         it("should return all users", async () => {
             const response = await request
-                .get("/user")
+                .get("/api/user")
                 .set({authorization: `JWT ${accessToken}`})
                 .expect(200);
                 
@@ -96,7 +96,7 @@ describe("User Routes", () => {
         
         it("should return user by valid ID", async () => {
             const response = await request
-                .get(`/user/${userId}`)
+                .get(`/api/user/${userId}`)
                 .set({authorization: `JWT ${accessToken}`})
                 .expect(200);
                 
@@ -106,7 +106,7 @@ describe("User Routes", () => {
         
         it("should return user by valid username", async () => {
             const response = await request
-                .get(`/user/${testUser.username}`)
+                .get(`/api/user/${testUser.username}`)
                 .set({authorization: `JWT ${accessToken}`})
                 .expect(200);
                 
@@ -117,7 +117,7 @@ describe("User Routes", () => {
         
         it("should return 404 for non-existent username", async () => {
             const response = await request
-                .get("/user/nonexistentuser")
+                .get("/api/user/nonexistentuser")
                 .set({authorization: `JWT ${accessToken}`})
                 .expect(404);
                 
@@ -128,7 +128,7 @@ describe("User Routes", () => {
             const nonExistentId = new mongoose.Types.ObjectId().toString();
             
             const response = await request
-                .get(`/user/${nonExistentId}`)
+                .get(`/api/user/${nonExistentId}`)
                 .set({authorization: `JWT ${accessToken}`})
                 .expect(404);
                 
@@ -152,7 +152,7 @@ describe("User Routes", () => {
             const updatedEmail = "updated@example.com";
             
             const response = await request
-                .patch(`/user/${testUserId}`)
+                .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ email: updatedEmail })
                 .expect(200);
@@ -169,7 +169,7 @@ describe("User Routes", () => {
             const newPassword = "newpassword123";
             
             const response = await request
-                .patch(`/user/${testUserId}`)
+                .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ password: newPassword })
                 .expect(200);
@@ -183,7 +183,7 @@ describe("User Routes", () => {
         
         it("should return 400 for invalid user ID format", async () => {
             const response = await request
-                .patch("/user/invalid-id")
+                .patch("/api/user/invalid-id")
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ email: "updated@example.com" })
                 .expect(400);
@@ -193,7 +193,7 @@ describe("User Routes", () => {
         
         it("should return 400 when body is missing", async () => {
             const response = await request
-                .patch(`/user/${testUserId}`)
+                .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .expect(400);
                 
@@ -202,7 +202,7 @@ describe("User Routes", () => {
         
         it("should return 400 when trying to update username", async () => {
             const response = await request
-                .patch(`/user/${testUserId}`)
+                .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ username: "newusername" })
                 .expect(400);
@@ -214,7 +214,7 @@ describe("User Routes", () => {
             await createUserWithHashedPassword(testUser2);
             
             const response = await request
-                .patch(`/user/${testUserId}`)
+                .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ email: testUser2.email })
                 .expect(400);
@@ -226,7 +226,7 @@ describe("User Routes", () => {
             const nonExistentId = new mongoose.Types.ObjectId().toString();
             
             const response = await request
-                .patch(`/user/${nonExistentId}`)
+                .patch(`/api/user/${nonExistentId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ email: "updated@example.com" })
                 .expect(400);
@@ -239,7 +239,7 @@ describe("User Routes", () => {
             const otherUserId = otherUser._id.toString();
             
             const response = await request
-                .patch(`/user/${otherUserId}`)
+                .patch(`/api/user/${otherUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .send({ email: "unauthorized@example.com" })
                 .expect(400);
@@ -261,7 +261,7 @@ describe("User Routes", () => {
         
         it("should delete user successfully", async () => {
             const response = await request
-                .delete(`/user/${testUserId}`)
+                .delete(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .expect(200);
                 
@@ -274,7 +274,7 @@ describe("User Routes", () => {
         
         it("should return 400 for invalid user ID format", async () => {
             const response = await request
-                .delete("/user/invalid-id")
+                .delete("/api/user/invalid-id")
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .expect(400);
                 
@@ -285,7 +285,7 @@ describe("User Routes", () => {
             const nonExistentId = new mongoose.Types.ObjectId().toString();
             
             const response = await request
-                .delete(`/user/${nonExistentId}`)
+                .delete(`/api/user/${nonExistentId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .expect(400);
                 
@@ -297,7 +297,7 @@ describe("User Routes", () => {
             const otherUserId = otherUser._id.toString();
             
             const response = await request
-                .delete(`/user/${otherUserId}`)
+                .delete(`/api/user/${otherUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
                 .expect(400);
                 

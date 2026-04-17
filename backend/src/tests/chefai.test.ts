@@ -34,9 +34,9 @@ beforeAll(async () => {
     app = await createApp(Mode.TEST);
     request = supertest(app);
 
-    const registerUser = await request.post("/auth/register").send(testUser);
+    const registerUser = await request.post("/api/auth/register").send(testUser);
     userId = registerUser.body._id.toString();
-    const loggedInUser = await request.post("/auth/login").send(testUser);
+    const loggedInUser = await request.post("/api/auth/login").send(testUser);
     accessToken = loggedInUser.body.accessToken;
 });
 
@@ -73,7 +73,7 @@ describe("ChefAI - search_recipes", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a lemon recipe" })
             .expect(200);
@@ -99,7 +99,7 @@ describe("ChefAI - search_recipes", () => {
         });
 
         const first = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find recipes" })
             .expect(200);
@@ -107,7 +107,7 @@ describe("ChefAI - search_recipes", () => {
         const sessionId = first.body.sessionId;
 
         const second = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ sessionId, message: "find more recipes" })
             .expect(200);
@@ -133,7 +133,7 @@ describe("ChefAI - search_recipes", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a lemon recipe" })
             .expect(200);
@@ -166,7 +166,7 @@ describe("ChefAI - modify_recipe", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "replace chocolate chips with banana slices" })
             .expect(200);
@@ -185,7 +185,7 @@ describe("ChefAI - general_question", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "can I substitute butter with something?" })
             .expect(200);
@@ -200,7 +200,7 @@ describe("ChefAI - error handling", () => {
         jest.spyOn(chatSession, "findById").mockResolvedValueOnce(null);
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a recipe" })
             .expect(500);
@@ -215,7 +215,7 @@ describe("ChefAI - error handling", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a recipe" })
             .expect(400);
@@ -280,7 +280,7 @@ describe("ChefAI - searchPosts filters", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a recipe under 10 minutes" })
             .expect(200);
@@ -305,7 +305,7 @@ describe("ChefAI - searchPosts filters", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a recipe with lemon" })
             .expect(200);
@@ -330,7 +330,7 @@ describe("ChefAI - searchPosts filters", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a recipe without egg" })
             .expect(200);
@@ -356,7 +356,7 @@ describe("ChefAI - searchPosts filters", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "find me a breakfast recipe" })
             .expect(200);
@@ -381,7 +381,7 @@ describe("ChefAI - searchPosts filters", () => {
         });
 
         const response = await request
-            .post("/chefai")
+            .post("/api/chefai")
             .set({ authorization: `JWT ${accessToken}` })
             .send({ message: "show me all recipes" })
             .expect(200);
