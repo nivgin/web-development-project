@@ -1,0 +1,16 @@
+{
+"compilerOptions": {
+ "module": "commonjs",
+ "esModuleInterop": true,
+ "target": "es6",
+ "moduleResolution": "node",
+ "sourceMap": true,
+ "outDir": "dist",
+ "rootDir": "src",
+ "strict": true,
+ "typeRoots": ["./src/types", "./node_modules/@types"],
+ "types": ["jest", "node", "express"]
+ },
+"lib": ["es2015"],
+"exclude": ["./src/tests"]
+}
