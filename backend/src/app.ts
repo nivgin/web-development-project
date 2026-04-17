@@ -19,8 +19,8 @@ const startApp = async () => {
         http.createServer(app).listen(env.PORT);
     } else {
         const sslOptions = {
-            key: fs.readFileSync('../client_key.pem'),
-            cert: fs.readFileSync('../client_cert.pem')
+            key: fs.readFileSync('../client-key.pem'),
+            cert: fs.readFileSync('../client-cert.pem')
         };
         console.log('PROD')
         https.createServer(sslOptions, app).listen(env.HTTPS_PORT);
