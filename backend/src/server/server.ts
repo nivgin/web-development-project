@@ -44,7 +44,6 @@ export const createApp = async (appMmode?: Mode) => {
         res.header('Access-Control-Allow-Methods', '*');
         next();
     });
-    app.use('/', express.static('public'));
     app.use('/public', express.static('public'));
     app.use('/api/auth', authRouter)
     app.use('/api/post', authenticate, postRouter);
@@ -52,6 +51,14 @@ export const createApp = async (appMmode?: Mode) => {
     app.use('/api/user', authenticate, userRouter);
     app.use('/api/chefai', authenticate, chefaiRouter)
     app.use('/api/file', fileRouter)
+
+    app.get('/{*path}', (req, res) => {
+        if (/\.\w+$/.test(req.path)) {
+            res.sendFile(req.path, { root: 'public' });
+        } else {
+            res.sendFile('index.html', { root: 'public' });
+        }
+    });
 
     return app;
 }
