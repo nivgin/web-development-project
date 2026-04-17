@@ -46,12 +46,12 @@ export const createApp = async (appMmode?: Mode) => {
     });
     app.use('/', express.static('public'));
     app.use('/public', express.static('public'));
-    app.use('/auth', authRouter)
-    app.use('/post', authenticate, postRouter);
-    app.use('/comment', authenticate, commentRouter)
-    app.use('/user', authenticate, userRouter);
-    app.use('/chefai', authenticate, chefaiRouter)
-    app.use('/file', fileRouter)
+    app.use('/api/auth', authRouter)
+    app.use('/api/post', authenticate, postRouter);
+    app.use('/api/comment', authenticate, commentRouter)
+    app.use('/api/user', authenticate, userRouter);
+    app.use('/api/chefai', authenticate, chefaiRouter)
+    app.use('/api/file', fileRouter)
 
     return app;
 }

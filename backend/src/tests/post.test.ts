@@ -46,9 +46,9 @@ beforeAll(async () => {
     request = supertest(app);
     
     // Create test user
-    const registerUser = await request.post("/auth/register").send(testUser);
+    const registerUser = await request.post("/api/auth/register").send(testUser);
     userId = registerUser.body._id.toString();
-    const loggedInUser = await request.post("/auth/login").send(testUser);
+    const loggedInUser = await request.post("/api/auth/login").send(testUser);
     accessToken = loggedInUser.body.accessToken;
 });
 
@@ -66,7 +66,7 @@ beforeEach(async () => {
 
 describe("Create Post", () => {
     it("should create a new post", async () => {
-        const response = await request.post("/post").set({authorization: `JWT ${accessToken}`}).send(testPost).expect(200);
+        const response = await request.post("/api/post").set({authorization: `JWT ${accessToken}`}).send(testPost).expect(200);
         
         expect(response.body).toBeDefined();
         expect(response.body._id).toBeDefined();
@@ -78,13 +78,13 @@ describe("Create Post", () => {
     });
     
     it("should return 400 when body is missing", async () => {
-        const response = await request.post("/post").set({authorization: `JWT ${accessToken}`}).expect(400);
+        const response = await request.post("/api/post").set({authorization: `JWT ${accessToken}`}).expect(400);
             
         expect(response.text).toBe("Missing Body");
     });
     
     it("should return 400 when field is missing", async () => {
-        const response = await request.post("/post").set({authorization: `JWT ${accessToken}`}).send(badPost).expect(400);
+        const response = await request.post("/api/post").set({authorization: `JWT ${accessToken}`}).send(badPost).expect(400);
             
         expect(response.text).toBe("Invalid Post");
     });
@@ -119,74 +119,74 @@ describe("Get Posts", () => {
     });
 
     it("should return all posts", async () => {
-        const response = await request.get("/post").set({authorization: `JWT ${accessToken}`}).expect(200);
+        const response = await request.get("/api/post").set({authorization: `JWT ${accessToken}`}).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(3);
     });
     
     it("should return posts by sender", async () => {
-        const response = await request.get(`/post?sender=${userId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
+        const response = await request.get(`/api/post?sender=${userId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(2);
     });
     
     it("should return empty array when no posts from sender", async () => {
         const nonExistentUserId = new mongoose.Types.ObjectId().toString();
-        const response = await request.get(`/post?sender=${nonExistentUserId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
+        const response = await request.get(`/api/post?sender=${nonExistentUserId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(0);
     });
 
     it("should return first page of posts", async () => {
-        const response = await request.get("/post?page=1&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?page=1&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(2);
     });
 
     it("should return second page of posts", async () => {
-        const response = await request.get("/post?page=2&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?page=2&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(1);
     });
 
     it("should return empty array when page exceeds total posts", async () => {
-        const response = await request.get("/post?page=99&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?page=99&limit=2").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(0);
     });
 
     it("should return paginated posts by sender", async () => {
-        const response = await request.get(`/post?sender=${userId}&page=1&limit=1`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/api/post?sender=${userId}&page=1&limit=1`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(1);
     });
 
         it("should return posts matching search query", async () => {
-        const response = await request.get("/post?search=title").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?search=title").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(2);
     });
 
     it("should return posts matching partial search query", async () => {
-        const response = await request.get("/post?search=ret").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?search=ret").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(1);
     });
 
     it("should be case-insensitive when searching", async () => {
-        const response = await request.get("/post?search=TITLE").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?search=TITLE").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(2);
     });
 
     it("should return posts matching search query filtered by sender", async () => {
-        const response = await request.get(`/post?sender=${userId}&search=title`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/api/post?sender=${userId}&search=title`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(2);
     });
 
     it("should return empty array when search does not match any post", async () => {
-        const response = await request.get("/post?search=zzznomatch").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post?search=zzznomatch").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(0);
     });
@@ -201,7 +201,7 @@ describe("Get Post By Id", () => {
     });
     
     it("return post by Id", async () => {
-        const response = await request.get(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
+        const response = await request.get(`/api/post/${postId}`).set({authorization: `JWT ${accessToken}`}).expect(200);
         expect(response.body).toBeDefined();
         expect(response.body._id).toBe(postId);
         expect(response.body.content).toBe(testPost.content);
@@ -209,13 +209,13 @@ describe("Get Post By Id", () => {
     });
     
     it("Invalid post ID format", async () => {
-        const response = await request.get("/post/invalid-id").set({authorization: `JWT ${accessToken}`}).expect(400);
+        const response = await request.get("/api/post/invalid-id").set({authorization: `JWT ${accessToken}`}).expect(400);
         expect(response.text).toBe("Invalid Post Id");
     });
     
     it("Non-existent post ID", async () => {
         const nonExistentId = new mongoose.Types.ObjectId().toString();
-        const response = await request.get(`/post/${nonExistentId}`).set({authorization: `JWT ${accessToken}`}).expect(404);
+        const response = await request.get(`/api/post/${nonExistentId}`).set({authorization: `JWT ${accessToken}`}).expect(404);
         expect(response.text).toBe("Post Not Found");
     });
 })
@@ -247,7 +247,7 @@ describe("Update Post By Id", () => {
             time: 15,
             category: "Breakfast"
         };
-        const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(200);
+        const response = await request.put(`/api/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(200);
         expect(response.body).toBeDefined();
         expect(response.body._id).toBe(postId);
         expect(response.body.title).toBe(updatedPost.title);
@@ -264,17 +264,17 @@ describe("Update Post By Id", () => {
             title: "newtitle",
             content: "Updated post content"
         };
-        const response = await request.put("/post/invalid-id").set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(400);
+        const response = await request.put("/api/post/invalid-id").set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(400);
         expect(response.text).toBe("Invalid Post Id");
     });
     
     it("should return 400 when body is missing", async () => {
-        const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).expect(400);
+        const response = await request.put(`/api/post/${postId}`).set({authorization: `JWT ${accessToken}`}).expect(400);
         expect(response.text).toBe("Missing Body");
     });
     
     it("should return 400 when field is missing in body", async () => {
-        const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send({}).expect(400);
+        const response = await request.put(`/api/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send({}).expect(400);
         expect(response.text).toBe("Invalid Post");
     });
     
@@ -298,7 +298,7 @@ describe("Update Post By Id", () => {
             category: "Breakfast"
         };
         const nonExistentId = new mongoose.Types.ObjectId().toString();
-        const response = await request.put(`/post/${nonExistentId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(404);
+        const response = await request.put(`/api/post/${nonExistentId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(404);
         expect(response.text).toBe("Post Not Found");
     });
 
@@ -324,7 +324,7 @@ describe("Update Post By Id", () => {
         const nonExistentId = new mongoose.Types.ObjectId().toString();
         const post = await postModel.create({ ...testPost, sender: nonExistentId });
         postId = post._id.toString();
-        const response = await request.put(`/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(400);
+        const response = await request.put(`/api/post/${postId}`).set({authorization: `JWT ${accessToken}`}).send(updatedPost).expect(400);
         expect(response.text).toBe("Unauthorized");
     });
     
@@ -339,23 +339,23 @@ describe("Get Posts DTO fields", () => {
     });
 
     it("should return likeCount and isLiked=true for liked post", async () => {
-        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
-        const response = await request.get(`/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await request.post(`/api/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/api/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(response.body.likeCount).toBe(1);
         expect(response.body.isLiked).toBe(true);
     });
 
     it("should return isLiked=false for post not liked by user", async () => {
-        await request.post(`/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
-        const response = await request.get(`/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await request.post(`/api/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/api/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(response.body.likeCount).toBe(0);
         expect(response.body.isLiked).toBe(false);
     });
 
         it("should return likeCount and isLiked for the correct posts", async () => {
-        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await request.post(`/api/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         await postModel.create({ ...testPost, sender: userId });
-        const response = await request.get(`/post`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get(`/api/post`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(response.body[0].likeCount).toBe(1);
         expect(response.body[0].isLiked).toBe(true);
         expect(response.body[1].likeCount).toBe(0);
@@ -372,14 +372,14 @@ describe("Like Post", () => {
     });
 
     it("should like a post successfully", async () => {
-        await request.post(`/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await request.post(`/api/post/${postId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         const post = await postModel.findById(postId);
         expect(post?.likes).toContainEqual(new mongoose.Types.ObjectId(userId));
     });
 
     it("should return 404 for non-existent post ID", async () => {
         const nonExistentId = new mongoose.Types.ObjectId().toString();
-        const response = await request.post(`/post/${nonExistentId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(404);
+        const response = await request.post(`/api/post/${nonExistentId}/like`).set({ authorization: `JWT ${accessToken}` }).expect(404);
         expect(response.text).toBe("Post Not Found");
     });
 });
@@ -393,14 +393,14 @@ describe("Unlike Post", () => {
     });
     
     it("should unlike a post successfully", async () => {
-        await request.post(`/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        await request.post(`/api/post/${postId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(200);
         const post = await postModel.findById(postId);
         expect(post?.likes).not.toContainEqual(new mongoose.Types.ObjectId(userId));
     });
 
     it("should return 404 for non-existent post ID", async () => {
         const nonExistentId = new mongoose.Types.ObjectId().toString();
-        const response = await request.post(`/post/${nonExistentId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(404);
+        const response = await request.post(`/api/post/${nonExistentId}/unlike`).set({ authorization: `JWT ${accessToken}` }).expect(404);
         expect(response.text).toBe("Post Not Found");
     });
 });
@@ -413,7 +413,7 @@ describe("Get Categories", () => {
             { name: "Dessert" }
         ]);
 
-        const response = await request.get("/post/categories").set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const response = await request.get("/api/post/categories").set({ authorization: `JWT ${accessToken}` }).expect(200);
         expect(Array.isArray(response.body)).toBe(true);
         expect(response.body.length).toBe(3);
         expect(response.body).toContain("Soup");
