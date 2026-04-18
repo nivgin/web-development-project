@@ -8,12 +8,12 @@ import UserBubble from "../../components/UserBubble/UserBubble";
 import { root, scrollArea, inner, chatArea, inputBar, inputInner } from "./styles";
 import type { ChatMessage } from "../../types/ChatMessage";
 import { useAPI } from "../../hooks/useApi";
+import { useChefChat } from "../../hooks/useChefChat";
 
 export default function AskTheChefPage() {
   const [input, setInput] = useState("");
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const { messages, setMessages, sessionId, setSessionId } = useChefChat();
   const [isThinking, setIsThinking] = useState(false);
-  const [sessionId, setSessionId] = useState<string | undefined>(undefined);
   const bottomRef = useRef<HTMLDivElement>(null);
   const { chefai } = useAPI();
 
