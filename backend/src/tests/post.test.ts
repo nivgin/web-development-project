@@ -363,6 +363,39 @@ describe("Get Posts DTO fields", () => {
     });
 });
 
+describe("Delete Post", () => {
+    let postId: string;
+
+    beforeEach(async () => {
+        const post = await postModel.create({ ...testPost, sender: userId });
+        postId = post._id.toString();
+    });
+
+    it("should delete a post successfully", async () => {
+        await request.delete(`/api/post/${postId}`).set({ authorization: `JWT ${accessToken}` }).expect(200);
+        const post = await postModel.findById(postId);
+        expect(post).toBeNull();
+    });
+
+    it("should return 400 for invalid post ID format", async () => {
+        const response = await request.delete("/api/post/invalid-id").set({ authorization: `JWT ${accessToken}` }).expect(400);
+        expect(response.text).toBe("Invalid Post Id");
+    });
+
+    it("should return 404 for non-existent post ID", async () => {
+        const nonExistentId = new mongoose.Types.ObjectId().toString();
+        const response = await request.delete(`/api/post/${nonExistentId}`).set({ authorization: `JWT ${accessToken}` }).expect(404);
+        expect(response.text).toBe("Post Not Found");
+    });
+
+    it("Block user from deleting other user's post", async () => {
+        const otherUserId = new mongoose.Types.ObjectId().toString();
+        const otherPost = await postModel.create({ ...testPost, sender: otherUserId });
+        const response = await request.delete(`/api/post/${otherPost._id}`).set({ authorization: `JWT ${accessToken}` }).expect(400);
+        expect(response.text).toBe("Unauthorized");
+    });
+});
+
 describe("Like Post", () => {
     let postId: string;
         
