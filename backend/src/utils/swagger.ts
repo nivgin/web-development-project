@@ -117,6 +117,13 @@ const options = {
             refreshToken: { type: "string", example: "eyJhbGciOi..." }
           }
         },
+        GoogleAuthRequest: {
+          type: "object",
+          required: ["idToken"],
+          properties: {
+            idToken: { type: "string", description: "Google OAuth2 ID token", example: "eyJhbGciOiJSUzI1NiIs..." }
+          }
+        },
         AuthTokens: {
           type: "object",
           properties: {
