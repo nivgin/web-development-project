@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import AppAlert from "../../components/Alert/Alert";
 import { AxiosError } from "axios";
 import { useAuth } from "../../hooks/useAuth";
@@ -33,7 +33,7 @@ export type { LoginForm, SignupForm };
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true);
   const navigate = useNavigate();
-  const { login, register: registerUser, loginWithGoogle } = useAuth();
+  const { login, register: registerUser, loginWithGoogle, isAuthenticated } = useAuth();
 
   const [alertMessage, setAlertMessage] = useState("");
   const [alertSeverity, setAlertSeverity] = useState<"error" | "success" | "info" | "warning">("error");
@@ -87,6 +87,10 @@ export default function AuthPage() {
       setAlertOpen(true);
     }
   };
+
+  if (isAuthenticated) {
+    return <Navigate to="/" replace />;
+  }
 
   return (
     <Box sx={{ display: "flex", minHeight: "100vh", backgroundColor: "background.default" }}>
