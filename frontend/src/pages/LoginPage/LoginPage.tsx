@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Box } from "@mui/material";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import AppAlert from "../../components/Alert/Alert";
 import { AxiosError } from "axios";
 import { useAuth } from "../../hooks/useAuth";
@@ -89,7 +89,7 @@ export default function AuthPage() {
   };
 
   if (isAuthenticated) {
-    return <Navigate to="/" replace />;
+    navigate("/");
   }
 
   return (
