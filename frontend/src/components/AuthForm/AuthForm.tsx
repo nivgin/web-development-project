@@ -19,9 +19,10 @@ interface AuthFormProps {
   onSubmit: SubmitHandler<AuthFormType>;
   onToggleMode: () => void;
   onGoogleSignIn: (idToken: string) => Promise<void>;
+  onGoogleSignInFailure?: () => void;
 }
 
-const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, onToggleMode, onGoogleSignIn }: AuthFormProps) => {
+const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, onToggleMode, onGoogleSignIn, onGoogleSignInFailure }: AuthFormProps) => {
   return (
     <Box sx={container}>
       <Box sx={card}>
@@ -83,7 +84,7 @@ const AuthForm = ({ isLogin, control, handleSubmit, isValid, loading, onSubmit, 
         
         <Divider sx={{ my: 3, color: "text.secondary" }}>or</Divider>
 
-        <GoogleSignInButton onCredential={onGoogleSignIn} />
+        <GoogleSignInButton onCredential={onGoogleSignIn} onFailure={onGoogleSignInFailure} />
       </Box>
     </Box>
   );
