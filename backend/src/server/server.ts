@@ -2,6 +2,7 @@ import express, { Application } from "express";
 import cors from 'cors';
 import { dbConnection } from "../utils/db";
 import { createMongoMemoryDatabase } from "../tests/testUtils";
+import { specs, swaggerUi } from '../utils/swagger';
 import bodyParser from "body-parser";
 
 import postRouter from "../routes/post";
@@ -51,6 +52,12 @@ export const createApp = async (appMmode?: Mode) => {
     app.use('/api/user', authenticate, userRouter);
     app.use('/api/chefai', authenticate, chefaiRouter)
     app.use('/api/file', fileRouter)
+
+    // Swagger documentation
+    app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(specs, {
+        customCss: '.swagger-ui .topbar { display: none }',
+        customSiteTitle: 'API Documentation'
+    }));
 
     app.get('/{*path}', (req, res) => {
         if (/\.\w+$/.test(req.path)) {

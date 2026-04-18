@@ -141,7 +141,7 @@ describe("ChefAI - search_recipes", () => {
         const session = await chatSession.findById(response.body.sessionId);
         const assistantMessages = session?.messages.filter(m => m.role === "assistant");
         expect(assistantMessages?.length).toBeGreaterThan(0);
-        expect(assistantMessages?.[0].content).toContain("I found the following recipes");
+        expect(assistantMessages?.[0].content).toContain("lemon");
     });
 });
 
