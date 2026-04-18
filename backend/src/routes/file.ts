@@ -3,13 +3,9 @@ import multer from "multer";
 import env from "../utils/env";
 
 const fileRouter = express.Router();
-let base = env.BASE_DOMAIN + ":"
-if (env.NODE_ENV !== 'production') {
-  base += env.PORT + "/";
-}
-else {
-  base += env.HTTPS_PORT + "/";
-}
+
+const port = env.NODE_ENV !== 'production' ? env.PORT : env.HTTPS_PORT;
+const base = `${env.BASE_DOMAIN}:${port}/`;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
