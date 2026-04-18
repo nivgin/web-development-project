@@ -201,6 +201,51 @@ describe("Comment Routes", () => {
             expect(Array.isArray(response.body)).toBe(true);
             expect(response.body.length).toBe(0);
         });
+
+        it("should populate sender details when populateUsers=true", async () => {
+            const response = await request
+                .get(`/api/comment?postId=${testComment.postId}&populateUsers=true`)
+                .set({ authorization: `JWT ${accessToken}` })
+                .expect(200);
+
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(2);
+            response.body.forEach((comment: IComment & { sender: { username: string; pfpUrl: string } }) => {
+                expect(typeof comment.sender).toBe("object");
+                expect(comment.sender.username).toBe(testUser.username);
+                expect(comment.sender.pfpUrl).toBe(testUser.pfpUrl);
+            });
+        });
+
+        it("should return first page of comments", async () => {
+            const response = await request
+                .get(`/api/comment?postId=${testComment.postId}&page=1&limit=1`)
+                .set({ authorization: `JWT ${accessToken}` })
+                .expect(200);
+
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(1);
+        });
+
+        it("should return second page of comments", async () => {
+            const response = await request
+                .get(`/api/comment?postId=${testComment.postId}&page=2&limit=1`)
+                .set({ authorization: `JWT ${accessToken}` })
+                .expect(200);
+
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(1);
+        });
+
+        it("should return empty array when page exceeds total comments", async () => {
+            const response = await request
+                .get(`/api/comment?postId=${testComment.postId}&page=99&limit=2`)
+                .set({ authorization: `JWT ${accessToken}` })
+                .expect(200);
+
+            expect(Array.isArray(response.body)).toBe(true);
+            expect(response.body.length).toBe(0);
+        });
     });
     
     describe("GET /comment/:id", () => {
