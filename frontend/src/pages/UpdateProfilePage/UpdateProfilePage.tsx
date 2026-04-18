@@ -26,21 +26,21 @@ export default function UpdateProfilePage() {
 
   const { control, handleSubmit, reset } = useForm<ProfileFormSchema>({
     resolver: zodResolver(profileFormSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { username: "", password: "" },
   });
 
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     if (!user) return;
-    reset({ email: user.email, password: "" });
+    reset({ username: user.username, password: "" });
     setImagePreview(user.pfpUrl ?? null);
   }, [user]);
 
   const { mutateAsync: updateUser, isPending } = useMutation({
     mutationFn: (data: ProfileFormSchema) =>
       api.users.updateUser(userId!, {
-        email: data.email,
+        username: data.username,
         password: data.password,
         image: data.image?.[0] ?? null,
         existingPfpUrl: user!.pfpUrl,

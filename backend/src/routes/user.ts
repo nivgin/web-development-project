@@ -154,8 +154,8 @@ userRouter.patch('/:id', async (req, res) => {
         return res.status(400).send('Missing Body');
     }
 
-    if (req.body.username) {
-        return res.status(400).send('Username cannot be updated');
+    if (req.body.email) {
+        return res.status(400).send('Email cannot be updated');
     }
 
     const updateData = { ...req.body };
@@ -173,7 +173,7 @@ userRouter.patch('/:id', async (req, res) => {
         res.status(200).send(updatedUser);
     } catch (error) {
         if (error instanceof MongoServerError && error.code === 11000) {
-            return res.status(400).send('Email already exists');
+            return res.status(400).send('Username already exists');
         }
         throw error;
     }
