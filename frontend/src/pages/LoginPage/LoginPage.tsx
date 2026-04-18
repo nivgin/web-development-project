@@ -104,6 +104,11 @@ export default function AuthPage() {
         onSubmit={onSubmit}
         onToggleMode={() => setIsLogin(!isLogin)}
         onGoogleSignIn={handleGoogleSignIn}
+        onGoogleSignInFailure={() => {
+          setAlertMessage("Google sign-in failed. Please try again.");
+          setAlertSeverity("error");
+          setAlertOpen(true);
+        }}
       />
       <AppAlert
         open={alertOpen}

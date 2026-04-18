@@ -1,5 +1,9 @@
 import swaggerJsdoc from 'swagger-jsdoc';
 import swaggerUi from 'swagger-ui-express';
+import env from './env';
+
+const port = env.NODE_ENV !== 'production' ? env.PORT : env.HTTPS_PORT;
+const serverUrl = `${env.BASE_DOMAIN}:${port}`;
 
 const options = {
   definition: {
@@ -21,8 +25,8 @@ const options = {
     ],
     servers: [
       {
-        url: 'http://localhost:4000',
-        description: 'Development server',
+        url: serverUrl,
+        description: 'Server',
       },
     ],
     security: [
@@ -115,6 +119,13 @@ const options = {
           required: ["refreshToken"],
           properties: {
             refreshToken: { type: "string", example: "eyJhbGciOi..." }
+          }
+        },
+        GoogleAuthRequest: {
+          type: "object",
+          required: ["idToken"],
+          properties: {
+            idToken: { type: "string", description: "Google OAuth2 ID token", example: "eyJhbGciOiJSUzI1NiIs..." }
           }
         },
         AuthTokens: {

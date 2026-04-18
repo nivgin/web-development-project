@@ -4,6 +4,20 @@ import TestAgent from "supertest/lib/agent";
 import { createApp, Mode, TestableApplication } from "../server/server";
 import userModel from "../models/user";
 import { verifyRefreshToken } from "../utils/jwt";
+import { OAuth2Client } from "google-auth-library";
+
+jest.mock("google-auth-library", () => ({
+    OAuth2Client: jest.fn().mockImplementation(() => ({
+        verifyIdToken: jest.fn().mockResolvedValue({
+            getPayload: () => ({
+                sub: "google-sub-123",
+                email: "googleuser@gmail.com",
+                name: "Google User",
+                picture: "https://example.com/pic.jpg",
+            }),
+        }),
+    })),
+}));
 
 let app: TestableApplication;
 let request: TestAgent;
@@ -135,3 +149,48 @@ describe("Logout", () => {
     await request.post("/api/auth/logout").set({authorization: `JWT ${accessToken}`}).expect(400);
     });
 })
+
+describe("Google Auth", () => {
+    it("should login and return tokens for a new Google user", async () => {
+        const response = await request.post("/api/auth/google").send({ idToken: "mock-id-token" }).expect(200);
+        expect(response.body.accessToken).toBeDefined();
+        expect(response.body.refreshToken).toBeDefined();
+
+        const user = await userModel.findOne({ email: "googleuser@gmail.com" });
+        expect(user).toBeTruthy();
+        expect(user?.googleId).toBe("google-sub-123");
+    });
+
+    it("should return existing user tokens on repeated Google login", async () => {
+        await request.post("/api/auth/google").send({ idToken: "mock-id-token" }).expect(200);
+        const response = await request.post("/api/auth/google").send({ idToken: "mock-id-token" }).expect(200);
+        expect(response.body.accessToken).toBeDefined();
+        expect(response.body.refreshToken).toBeDefined();
+
+        const users = await userModel.find({ email: "googleuser@gmail.com" });
+        expect(users.length).toBe(1);
+    });
+
+    it("should return 400 when idToken is missing", async () => {
+        const response = await request.post("/api/auth/google").send({}).expect(400);
+        expect(response.text).toBe("Missing ID token");
+    });
+
+    it("should return 400 when Google token verification fails", async () => {
+        const mockInstance = jest.mocked(OAuth2Client).mock.results[0].value;
+        mockInstance.verifyIdToken.mockRejectedValueOnce(new Error("Token invalid"));
+
+        const response = await request.post("/api/auth/google").send({ idToken: "bad-token" }).expect(400);
+        expect(response.text).toBe("Google authentication failed");
+    });
+
+    it("should return 400 when Google payload has no sub", async () => {
+        const mockInstance = jest.mocked(OAuth2Client).mock.results[0].value;
+        mockInstance.verifyIdToken.mockResolvedValueOnce({
+            getPayload: () => ({ email: "googleuser@gmail.com" }),
+        });
+
+        const response = await request.post("/api/auth/google").send({ idToken: "mock-id-token" }).expect(400);
+        expect(response.text).toBe("Invalid Google token");
+    });
+});

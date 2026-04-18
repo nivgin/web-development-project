@@ -148,21 +148,21 @@ describe("User Routes", () => {
             testUserAccessToken = result.accessToken;
         });
         
-        it("should update user email successfully", async () => {
-            const updatedEmail = "updated@example.com";
+        it("should update username successfully", async () => {
+            const updatedUsername = "updatedusername";
             
             const response = await request
                 .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
-                .send({ email: updatedEmail })
+                .send({ username: updatedUsername })
                 .expect(200);
                 
             expect(response.body).toBeDefined();
             expect(response.body._id).toBe(testUserId);
-            expect(response.body.email).toBe(updatedEmail);
+            expect(response.body.username).toBe(updatedUsername);
             
             const updatedUser = await userModel.findById(testUserId);
-            expect(updatedUser?.email).toBe(updatedEmail);
+            expect(updatedUser?.username).toBe(updatedUsername);
         });
         
         it("should update user password successfully", async () => {
@@ -200,26 +200,26 @@ describe("User Routes", () => {
             expect(response.text).toBe("Missing Body");
         });
         
-        it("should return 400 when trying to update username", async () => {
+        it("should return 400 when trying to update email", async () => {
             const response = await request
                 .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
-                .send({ username: "newusername" })
+                .send({ email: "newemail@example.com" })
                 .expect(400);
                 
-            expect(response.text).toBe("Username cannot be updated");
+            expect(response.text).toBe("Email cannot be updated");
         });
         
-        it("should return 400 when email already exists", async () => {
+        it("should return 400 when username already exists", async () => {
             await createUserWithHashedPassword(testUser2);
             
             const response = await request
                 .patch(`/api/user/${testUserId}`)
                 .set({authorization: `JWT ${testUserAccessToken}`})
-                .send({ email: testUser2.email })
+                .send({ username: testUser2.username })
                 .expect(400);
                 
-            expect(response.text).toBe("Email already exists");
+            expect(response.text).toBe("Username already exists");
         });
         
         it("should return 400 for non-existent user ID (authorization check first)", async () => {

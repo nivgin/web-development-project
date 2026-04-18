@@ -7,7 +7,7 @@ import * as styles from "./styles";
 
 export const profileFormSchema = z.object({
   image: z.instanceof(FileList).optional(),
-  email: z.string().email("Invalid email address").min(1, "Email is required"),
+  username: z.string().min(1, "Username is required"),
   password: z.string().or(z.literal("")).optional(),
 });
 
@@ -51,9 +51,9 @@ export default function ProfileForm({ control, handleSubmit, onSubmit, isSubmitt
           </Typography>
         </Stack>
 
-        {/* Email */}
-        <Typography variant="subtitle1">Email</Typography>
-        <FormInput<ProfileFormSchema> name="email" control={control} label="Email" type="email" />
+        {/* Username */}
+        <Typography variant="subtitle1">Username</Typography>
+        <FormInput<ProfileFormSchema> name="username" control={control} label="Username" type="text" />
 
         {/* Password */}
         <Typography variant="subtitle1">New Password</Typography>

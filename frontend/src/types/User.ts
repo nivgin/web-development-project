@@ -7,7 +7,7 @@ export type User = {
 };
 
 export type UpdateUserData = {
-    email?: string;
+    username?: string;
     password?: string;
     image?: File | null;
     existingPfpUrl: string;

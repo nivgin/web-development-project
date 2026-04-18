@@ -242,6 +242,41 @@ authRouter.post('/logout', authenticate, async (req, res) => {
     }
 })
 
+/**
+ * @swagger
+ * /auth/google:
+ *   post:
+ *     tags: [Auth]
+ *     summary: Login or register with Google
+ *     security: []
+ *     description: Authenticates a user via Google OAuth2 ID token. Creates a new account if the user does not exist.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             $ref: '#/components/schemas/GoogleAuthRequest'
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/AuthTokens'
+ *       400:
+ *         description: Missing or invalid Google token
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               examples:
+ *                 missingToken:
+ *                   value: "Missing ID token"
+ *                 invalidToken:
+ *                   value: "Invalid Google token"
+ *                 authFailed:
+ *                   value: "Google authentication failed"
+ */
 authRouter.post('/google', async (req, res) => {
     const { idToken } = req.body;
 

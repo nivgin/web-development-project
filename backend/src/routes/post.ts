@@ -328,21 +328,32 @@ postRouter.put('/:id', async (req, res) => {
 
 /**
  * @swagger
- * /post/{id}/like:
- *   post:
+ * /post/{id}:
+ *   delete:
  *     tags: [Posts]
- *     summary: Like a post
- *     description: Like a post by ID. The authenticated user is automatically used as the liker.
+ *     summary: Delete a post by ID
+ *     description: Permanently deletes a post. Only the post's sender can delete it.
  *     parameters:
  *       - in: path
  *         name: id
  *         required: true
  *         schema:
  *           type: string
- *         description: The ID of the post to like
+ *         description: The ID of the post to delete
  *     responses:
  *       200:
- *         description: Post liked successfully
+ *         description: Post deleted successfully
+ *       400:
+ *         description: Invalid post ID or unauthorized
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               examples:
+ *                 invalidId:
+ *                   value: "Invalid Post Id"
+ *                 unauthorized:
+ *                   value: "Unauthorized"
  *       404:
  *         description: Post not found
  *         content:
@@ -351,7 +362,6 @@ postRouter.put('/:id', async (req, res) => {
  *               type: string
  *               example: "Post Not Found"
  */
-
 postRouter.delete('/:id', async (req: Request, res: Response) => {
     const id = req.params.id;
     const sender = req.user;
@@ -375,6 +385,31 @@ postRouter.delete('/:id', async (req: Request, res: Response) => {
     return res.sendStatus(200);
 });
 
+/**
+ * @swagger
+ * /post/{id}/like:
+ *   post:
+ *     tags: [Posts]
+ *     summary: Like a post
+ *     description: Like a post by ID. The authenticated user is automatically used as the liker.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the post to like
+ *     responses:
+ *       200:
+ *         description: Post liked successfully
+ *       404:
+ *         description: Post not found
+ *         content:
+ *           text/plain:
+ *             schema:
+ *               type: string
+ *               example: "Post Not Found"
+ */
 postRouter.post('/:id/like', async (req: Request, res: Response) => {
     const id = req.params.id;
 
