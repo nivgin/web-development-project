@@ -1,6 +1,7 @@
 import supertest from "supertest";
 import mongoose from "mongoose";
 import TestAgent from "supertest/lib/agent";
+import env from "../utils/env";
 import { createApp, Mode, TestableApplication } from "../server/server";
 import path from "path";
 
@@ -51,5 +52,22 @@ describe("File Tests", () => {
             .expect(400);
 
         expect(response.body.error).toBe("No file uploaded");
+    });
+
+    it("returns url with HTTPS port in production", async () => {
+        const originalEnv = env.NODE_ENV;
+        env.HTTPS_PORT = "443";
+        env.NODE_ENV = "production";
+
+        const filePath = path.join(__dirname, "test.jpg");
+        const response = await request
+            .post("/api/file")
+            .set({ authorization: `JWT ${accessToken}` })
+            .attach("file", filePath)
+            .expect(200);
+
+        expect(response.body.url).toContain(env.HTTPS_PORT);
+
+        env.NODE_ENV = originalEnv;
     });
 });
