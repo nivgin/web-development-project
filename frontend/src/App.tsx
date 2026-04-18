@@ -16,6 +16,7 @@ import EditPostPage from "./pages/EditPostPage/EditPostPage";
 import UpdateProfilePage from "./pages/UpdateProfilePage/UpdateProfilePage";
 import ViewCustomPostPage from "./pages/ViewCustomPostPage/ViewCustomPostPage";
 import { GoogleOAuthProvider } from "@react-oauth/google";
+import { ChefChatProvider } from "./context/ChefChatProvider";
 
 export default function App() {
   return (
@@ -24,7 +25,9 @@ export default function App() {
         <CssBaseline />
         <BrowserRouter>
           <AuthProvider>
-            <AppContent />
+            <ChefChatProvider>
+              <AppContent />
+            </ChefChatProvider>
           </AuthProvider>
         </BrowserRouter>
       </ThemeProvider>
