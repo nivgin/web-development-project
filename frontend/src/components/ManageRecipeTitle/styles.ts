@@ -1,4 +1,4 @@
-export { container, inner, image, textSide, authorDivider } from "../RecipeTitle/styles";
+export { container, inner, image, textSide, lowerDivider} from "../RecipeTitle/styles";
 import type { SxProps } from "@mui/material";
 
 export const actionRow: SxProps = {

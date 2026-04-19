@@ -17,6 +17,8 @@ export const divider: SxProps = {
 
 export const list: SxProps = {
   p: 0,
+  columns: { xs: 1, sm: 2 },
+  columnGap: 4,
 };
 
 export const listItem: SxProps = {
@@ -25,6 +27,7 @@ export const listItem: SxProps = {
   display: "flex",
   alignItems: "center",
   gap: 1.5,
+  breakInside: "avoid",
 };
 
 export const bullet: SxProps = {
@@ -36,6 +39,6 @@ export const bullet: SxProps = {
 };
 
 export const itemText: SxProps = {
-  color: "text.secondary",
+  color: "text.primary",
   lineHeight: 1.6,
 };

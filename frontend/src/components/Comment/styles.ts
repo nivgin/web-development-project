@@ -18,11 +18,17 @@ export const commentContent: SxProps = {
   display: "flex",
   flexDirection: "column",
   gap: 0.25,
+  backgroundColor: "#e7e6e3",
+  borderRadius: 1,
+  padding: 2,
+  px: 1.5,
+  py: 1,
+  flex: 1,
+  minWidth: 0,
 };
 
 export const senderName: SxProps = {
   fontWeight: 600,
-  fontSize: "0.85rem",
   color: "text.primary",
 };
 

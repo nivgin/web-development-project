@@ -1,8 +1,6 @@
 import type { SxProps } from "@mui/material";
 
 export const container: SxProps = {
-  backgroundColor: "#f2f0ed",
-  borderBottom: "1px solid #e0e0e0",
   px: 2,
   py: 6,
   mt: "80px",
@@ -18,8 +16,8 @@ export const inner: SxProps = {
 };
 
 export const image: SxProps = {
-  width: { xs: "100%", md: "360px" },
-  maxWidth: { xs: "360px", md: "360px" },
+  width: { xs: "100%", md: "480px" },
+  maxWidth: { xs: "480px", md: "480px" },
   aspectRatio: "1 / 1",
   objectFit: "cover",
   borderRadius: 3,
@@ -40,8 +38,8 @@ export const authorRow: SxProps = {
   mb: 1.5,
 };
 
-export const authorDivider: SxProps = {
-  mb: 2,
+export const lowerDivider: SxProps = {
+  mt: 2,
 };
 
 export const avatar: SxProps = {

@@ -19,14 +19,13 @@ export default function InstructionList({ instructions }: InstructionListProps) 
   return (
     <Box sx={styles.paper}>
       <Box sx={styles.header}>
-        <Typography variant="h5" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold">
           Instructions
         </Typography>
       </Box>
-      <Divider sx={styles.divider} />
-      <Stepper orientation="vertical" nonLinear>
+      <Stepper orientation="vertical" nonLinear sx={styles.stepper}>
         {instructions.map((step, index) => (
-          <Step key={index} active>
+          <Step key={index} active sx={styles.step}>
             <StepLabel slotProps={{ stepIcon: { sx: styles.stepIconProps } }}>
                 <Typography variant="body1" sx={styles.stepContent}>
                     {step}
