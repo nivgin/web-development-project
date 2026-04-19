@@ -2,10 +2,19 @@
 import { createTheme } from "@mui/material";
 
 export const theme = createTheme({
+  typography: {
+    fontFamily: '"DM Sans", system-ui, sans-serif',
+    h1: { fontFamily: '"Lora", Georgia, serif' },
+    h2: { fontFamily: '"Lora", Georgia, serif' },
+    h3: { fontFamily: '"Lora", Georgia, serif' },
+    h4: { fontFamily: '"Lora", Georgia, serif' },
+    h5: { fontFamily: '"Lora", Georgia, serif' },
+    h6: { fontFamily: '"Lora", Georgia, serif' },
+  },
   palette: {
     mode: "light",
     primary: {
-      main: "#FF8A3D",
+      main: "#e45d1f",
       light: "#FFB98A",
       dark: "#FF7A1F",
     },
