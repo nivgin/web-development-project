@@ -32,7 +32,7 @@ export default function CommentList({ postId}: CommentListProps) {
   return (
     <Box sx={styles.paper}>
       <Box sx={styles.header}>
-        <Typography variant="h5" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold">
           Comments ({comments.length ?? "0"})
         </Typography>
       </Box>

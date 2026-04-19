@@ -11,11 +11,10 @@ export default function IngredientList({ ingredients }: IngredientListProps) {
   return (
     <Box sx={styles.paper}>
       <Box sx={styles.header}>
-        <Typography variant="h5" fontWeight="bold">
+        <Typography variant="h6" fontWeight="bold">
           Ingredients
         </Typography>
       </Box>
-      <Divider sx={styles.divider} />
       <List sx={styles.list}>
         {ingredients.map((ingredient, index) => (
           <ListItem key={index} sx={styles.listItem}>

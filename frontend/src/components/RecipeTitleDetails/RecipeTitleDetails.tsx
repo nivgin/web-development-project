@@ -36,7 +36,7 @@ export default function RecipeTitleDetails({ post }: { post: PostFull }) {
 
   return (
     <>
-      <Typography variant="h3" fontWeight="bold" sx={styles.title}>
+      <Typography variant="h4" fontWeight="bold" sx={styles.title}>
         {post.title}
       </Typography>
       {post.content && (
@@ -50,15 +50,15 @@ export default function RecipeTitleDetails({ post }: { post: PostFull }) {
           onClick={handleLikeToggle}
           size="small"
           disableRipple
-          sx={{ p: 0, gap: 0.75, color: liked ? "error.main" : "text.secondary" }}
+          sx={{ p: 0, gap: 0.75, color: liked ? "error.main" : "text.primary" }}
         >
           {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
-          <Typography variant="body2">{likeCount}</Typography>
+          <Typography variant="body1">{likeCount}</Typography>
         </IconButton>
         {post.category && (
           <Box sx={styles.metaItem}>
             <LocalDiningIcon fontSize="small" color="primary" />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {post.category}
             </Typography>
           </Box>
@@ -66,7 +66,7 @@ export default function RecipeTitleDetails({ post }: { post: PostFull }) {
         {post.servings != null && (
           <Box sx={styles.metaItem}>
             <PeopleAltIcon fontSize="small" color="primary" />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {post.servings} servings
             </Typography>
           </Box>
@@ -74,7 +74,7 @@ export default function RecipeTitleDetails({ post }: { post: PostFull }) {
         {post.time != null && (
           <Box sx={styles.metaItem}>
             <AccessTimeIcon fontSize="small" color="primary" />
-            <Typography variant="body2" color="text.secondary">
+            <Typography variant="body1" color="text.secondary">
               {post.time} min
             </Typography>
           </Box>

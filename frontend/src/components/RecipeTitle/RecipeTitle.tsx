@@ -2,6 +2,8 @@ import { Avatar, Box, Divider, Typography } from "@mui/material";
 import type { PostFull } from "../../types/Post";
 import type { User } from "../../types/User";
 import RecipeTitleDetails from "../RecipeTitleDetails/RecipeTitleDetails";
+import IngredientList from "../IngredientList/IngredientList";
+import InstructionList from "../InstructionList/InstructionList";
 import * as styles from "./styles";
 
 export default function RecipeTitle({ post, sender }: { post: PostFull; sender?: User }) {
@@ -21,8 +23,10 @@ export default function RecipeTitle({ post, sender }: { post: PostFull; sender?:
               {sender?.username ?? "Anonymous"}
             </Typography>
           </Box>
-          <Divider sx={styles.authorDivider} />
           <RecipeTitleDetails post={post} />
+          <Divider sx={styles.lowerDivider} />
+          <IngredientList ingredients={post.ingredients ?? []} />
+          <InstructionList instructions={post.instructions ?? []} />
         </Box>
       </Box>
     </Box>

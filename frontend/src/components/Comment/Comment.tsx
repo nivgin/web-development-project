@@ -15,8 +15,8 @@ export default function Comment({ content, sender }: CommentProps) {
         {!sender.pfpUrl && <PersonIcon sx={{ fontSize: 18 }} />}
       </Avatar>
       <Box sx={styles.commentContent}>
-        <Typography sx={styles.senderName}>{sender.username}</Typography>
-        <Typography sx={styles.contentText}>{content}</Typography>
+        <Typography variant="body1" sx={styles.senderName}>{sender.username}</Typography>
+        <Typography variant="body1" sx={styles.contentText}>{content}</Typography>
       </Box>
     </ListItem>
   );

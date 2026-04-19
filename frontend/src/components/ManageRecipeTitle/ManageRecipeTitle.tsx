@@ -3,6 +3,8 @@ import SettingsIcon from "@mui/icons-material/Settings";
 import DeleteIcon from "@mui/icons-material/Delete";
 import type { PostFull } from "../../types/Post";
 import RecipeTitleDetails from "../RecipeTitleDetails/RecipeTitleDetails";
+import IngredientList from "../IngredientList/IngredientList";
+import InstructionList from "../InstructionList/InstructionList";
 import * as styles from "./styles";
 
 export default function ManageRecipeTitle({
@@ -32,8 +34,10 @@ export default function ManageRecipeTitle({
               Delete
             </Button>
           </Box>
-          <Divider sx={styles.authorDivider} />
+          <Divider sx={styles.lowerDivider} />
           <RecipeTitleDetails post={post} />
+          <IngredientList ingredients={post.ingredients ?? []} />
+          <InstructionList instructions={post.instructions ?? []} />
         </Box>
       </Box>
     </Box>
