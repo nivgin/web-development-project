@@ -4,9 +4,6 @@ import env from "../utils/env";
 
 const fileRouter = express.Router();
 
-const port = env.NODE_ENV !== 'production' ? env.PORT : env.HTTPS_PORT;
-const base = `${env.BASE_DOMAIN}:${port}/`;
-
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "public/");
@@ -61,6 +58,8 @@ fileRouter.post("/", upload.single("file"), (req, res) => {
     return res.status(400).send({ error: "No file uploaded" });
   }
 
+  const port = env.NODE_ENV !== 'production' ? env.PORT : env.HTTPS_PORT;
+  const base = `${env.BASE_DOMAIN}:${port}/`;
   const url = base + req.file.path.replace(/\\/g, "/");
 
   res.status(200).send({ url });
