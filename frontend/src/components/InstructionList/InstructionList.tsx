@@ -1,6 +1,5 @@
 import {
   Box,
-  Divider,
   Step,
   StepContent,
   StepLabel,
