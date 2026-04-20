@@ -1,8 +1,8 @@
 import type { SxProps, Theme } from "@mui/material";
 
 export const imageUploadBox = (hasError: boolean, imagePreview: string | null): SxProps<Theme> => ({
-  width: "100%",
-  height: 220,
+  width: 320,
+  height: 320,
   borderRadius: 3,
   border: "2px dashed",
   borderColor: hasError ? "error.main" : "divider",
