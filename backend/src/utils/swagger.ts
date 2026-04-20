@@ -3,7 +3,7 @@ import swaggerUi from 'swagger-ui-express';
 import env from './env';
 
 const port = env.NODE_ENV !== 'production' ? env.PORT : env.HTTPS_PORT;
-const serverUrl = `${env.BASE_DOMAIN}:${port}`;
+const serverUrl = `${env.BASE_DOMAIN}:${port}/api`;
 
 const options = {
   definition: {
