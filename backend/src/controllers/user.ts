@@ -5,7 +5,7 @@ export const createUser = async (username: string, email: string, passwordHash: 
     return await userModel.create({ username, email, passwordHash, pfpUrl, googleId });
 }
 
-const PUBLIC_FIELDS = 'username email googleId pfpUrl';
+const PUBLIC_FIELDS = 'username email pfpUrl';
 
 export const getUserById = async (id: string, classified: boolean = false) => {
     if (classified) return await userModel.findById(id).select(PUBLIC_FIELDS);
