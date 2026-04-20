@@ -1,4 +1,4 @@
-import { Box, Divider, List, ListItem, Typography } from "@mui/material";
+import { Box, List, ListItem, Typography } from "@mui/material";
 import * as styles from "./styles";
 
 interface IngredientListProps {
