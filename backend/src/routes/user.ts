@@ -71,9 +71,9 @@ userRouter.get('/:id', async (req, res) => {
     let user;
     
     if (isValidObjectId(id)) {
-        user = await getUserById(id);
+        user = await getUserById(id, true);
     } else {
-        user = await getUserByUsername(id);
+        user = await getUserByUsername(id, true);
     }
 
     if (!user) {
