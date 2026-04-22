@@ -20,7 +20,7 @@ export default function ViewCustomPostPage() {
 
   return (
     <Box sx={{ backgroundColor: "#f9f7f5", minHeight: "100vh" }}>
-      <RecipeTitle post={post} sender={sender} />
+      <RecipeTitle post={post} sender={sender} customRecipe />
     </Box>
   );
 }

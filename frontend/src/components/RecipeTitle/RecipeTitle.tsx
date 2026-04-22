@@ -6,7 +6,7 @@ import IngredientList from "../IngredientList/IngredientList";
 import InstructionList from "../InstructionList/InstructionList";
 import * as styles from "./styles";
 
-export default function RecipeTitle({ post, sender }: { post: PostFull; sender?: User }) {
+export default function RecipeTitle({ post, sender, customRecipe }: { post: PostFull; sender?: User; customRecipe?: boolean }) {
   return (
     <Box sx={styles.container}>
       <Box sx={styles.inner}>
@@ -23,7 +23,7 @@ export default function RecipeTitle({ post, sender }: { post: PostFull; sender?:
               {sender?.username ?? "Anonymous"}
             </Typography>
           </Box>
-          <RecipeTitleDetails post={post} />
+          <RecipeTitleDetails post={post} customRecipe={customRecipe} />
           <Divider sx={styles.lowerDivider} />
           <IngredientList ingredients={post.ingredients ?? []} />
           <InstructionList instructions={post.instructions ?? []} />
