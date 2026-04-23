@@ -9,7 +9,7 @@ import type { PostFull } from "../../types/Post";
 import { useAPI } from "../../hooks/useApi";
 import * as styles from "./styles";
 
-export default function RecipeTitleDetails({ post }: { post: PostFull }) {
+export default function RecipeTitleDetails({ post, customRecipe }: { post: PostFull; customRecipe?: boolean }) {
   const api = useAPI();
   const [likedOverride, setLikedOverride] = useState<boolean | null>(null);
   const [countOverride, setCountOverride] = useState<number | null>(null);
@@ -46,15 +46,17 @@ export default function RecipeTitleDetails({ post }: { post: PostFull }) {
       )}
       <Divider sx={styles.divider} />
       <Box sx={styles.metaRow}>
-        <IconButton
-          onClick={handleLikeToggle}
-          size="small"
-          disableRipple
-          sx={{ p: 0, gap: 0.75, color: liked ? "error.main" : "text.primary" }}
-        >
-          {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
-          <Typography variant="body1">{likeCount}</Typography>
-        </IconButton>
+        {!customRecipe && (
+          <IconButton
+            onClick={handleLikeToggle}
+            size="small"
+            disableRipple
+            sx={{ p: 0, gap: 0.75, color: liked ? "error.main" : "text.primary" }}
+          >
+            {liked ? <FavoriteIcon fontSize="small" /> : <FavoriteBorderIcon fontSize="small" />}
+            <Typography variant="body1">{likeCount}</Typography>
+          </IconButton>
+        )}
         {post.category && (
           <Box sx={styles.metaItem}>
             <LocalDiningIcon fontSize="small" color="primary" />
