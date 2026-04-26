@@ -29,7 +29,7 @@ export async function callChefAI(
     ];
 
     const completion = await client.chat.completions.create({
-        model: "Qwen/Qwen2.5-7B-Instruct",
+        model: "Qwen/Qwen2.5-7B-Instruct:together",
         messages,
         temperature: 0.2,
         max_tokens: 500
